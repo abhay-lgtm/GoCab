@@ -7,7 +7,14 @@ export default function DriverRideHistory() {
   const rides = mockRides.filter(r => r.driverId === 'd1').slice(0, 10);
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-4">
-      <h1 className="text-2xl font-bold text-[#0a0f1e]">Ride History</h1>
+      <div>
+        <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
+          Ride History
+        </h1>
+        <p className="text-sm mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>
+          {rides.length} completed rides
+        </p>
+      </div>
       {rides.length === 0 ? (
         <EmptyState icon={History} title="No rides yet" message="Completed rides will appear here." />
       ) : (

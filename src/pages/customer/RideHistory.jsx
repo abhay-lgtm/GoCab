@@ -4,7 +4,6 @@ import { mockRides } from '../../data/mockData';
 import { useAuth } from '../../context/AuthContext';
 import RideCard from '../../components/booking/RideCard';
 import EmptyState from '../../components/common/EmptyState';
-import StatusBadge from '../../components/common/StatusBadge';
 
 const filters = ['All', 'Completed', 'Cancelled', 'In Progress'];
 
@@ -20,22 +19,31 @@ export default function RideHistory() {
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-5">
       <div>
-        <h1 className="text-2xl font-bold text-[#0a0f1e]">Ride History</h1>
-        <p className="text-sm text-[#9ca3af] mt-0.5">{allRides.length} total rides</p>
+        <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
+          Ride History
+        </h1>
+        <p className="text-sm mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>{allRides.length} total rides</p>
       </div>
 
       {/* Filter tabs */}
       <div className="flex gap-2 overflow-x-auto pb-1">
-        {filters.map(f => (
-          <button
-            key={f}
-            onClick={() => setFilter(f)}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all duration-150 shrink-0
-              ${filter === f ? 'bg-[#0a0f1e] text-white' : 'bg-white border border-[#e4e8f0] text-[#4b5563] hover:border-[#0a0f1e]/30'}`}
-          >
-            {f}
-          </button>
-        ))}
+        {filters.map(f => {
+          const active = filter === f;
+          return (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className="px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all duration-150 shrink-0"
+              style={{
+                background: active ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.05)',
+                color: active ? '#05091a' : 'rgba(255,255,255,0.5)',
+                border: active ? 'none' : '1px solid rgba(255,255,255,0.08)',
+              }}
+            >
+              {f}
+            </button>
+          );
+        })}
       </div>
 
       {/* Ride list */}

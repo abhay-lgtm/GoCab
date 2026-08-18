@@ -1,14 +1,12 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Users, Car, Navigation, IndianRupee, AlertTriangle,
-  TrendingUp, Activity, ShieldAlert,
+  Users, Car, Navigation, IndianRupee, Activity, ShieldAlert,
 } from 'lucide-react';
-import { mockAdminStats, mockRides, mockSystemActivity, mockSOSAlerts } from '../../data/mockData';
+import { mockRides, mockAdminStats, mockSOSAlerts, mockSystemActivity } from '../../data/mockData';
 import { formatCurrency } from '../../utils/formatCurrency';
+import { formatRelativeDate } from '../../utils/formatDate';
 import StatCard from '../../components/admin/StatCard';
 import StatusBadge from '../../components/common/StatusBadge';
-import { formatRelativeDate } from '../../utils/formatDate';
 
 // Tiny bar chart using CSS
 function MiniBarChart({ data }) {
@@ -18,11 +16,14 @@ function MiniBarChart({ data }) {
       {data.map((d, i) => (
         <div key={i} className="flex-1 flex flex-col items-center gap-1">
           <div
-            className="w-full rounded-sm bg-[#3b6ef8]/80 transition-all duration-300"
-            style={{ height: `${(d.value / max) * 52}px` }}
+            className="w-full rounded-sm transition-all duration-300"
+            style={{
+              height: `${(d.value / max) * 52}px`,
+              background: 'linear-gradient(to top, rgba(79,126,255,0.8), rgba(91,142,255,0.5))',
+            }}
             title={`${d.label}: ${formatCurrency(d.value)}`}
           />
-          <span className="text-[9px] text-[#9ca3af]">{d.label}</span>
+          <span className="text-[9px]" style={{ color: 'rgba(255,255,255,0.3)' }}>{d.label}</span>
         </div>
       ))}
     </div>
@@ -39,6 +40,12 @@ const revenueData = [
   { label: 'Sun', value: 19800 },
 ];
 
+const glass = {
+  background: 'rgba(255,255,255,0.04)',
+  border: '1px solid rgba(255,255,255,0.08)',
+  borderRadius: 20,
+};
+
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const activeAlerts = mockSOSAlerts.filter(a => a.status === 'active');
@@ -47,75 +54,59 @@ export default function AdminDashboard() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-[#0a0f1e]">Operations Dashboard</h1>
-        <p className="text-sm text-[#9ca3af] mt-0.5">RideSphere Platform · Live Overview</p>
+        <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
+          Operations Dashboard
+        </h1>
+        <p className="text-sm mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>
+          RideSphere Platform · Live Overview
+        </p>
       </div>
 
       {/* Active SOS alert banner */}
       {activeAlerts.length > 0 && (
         <button
           onClick={() => navigate('/admin/sos-alerts')}
-          className="w-full flex items-center gap-3 bg-red-50 border border-red-200 rounded-2xl px-4 py-3 hover:bg-red-100 transition-colors"
+          className="w-full flex items-center gap-3 rounded-2xl px-4 py-3 hover:opacity-90 transition-opacity"
+          style={{
+            background: 'rgba(239,68,68,0.08)',
+            border: '1px solid rgba(239,68,68,0.25)',
+          }}
         >
           <span className="relative flex h-3 w-3">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-3 w-3 bg-[#ef4444]" />
           </span>
-          <p className="text-sm font-semibold text-red-800 flex-1 text-left">
-            {activeAlerts.length} Active SOS Alert{activeAlerts.length > 1 ? 's' : ''} — Click to respond
+          <p className="text-sm font-semibold flex-1 text-left" style={{ color: '#f87171' }}>
+            {activeAlerts.length} Active SOS Alert{activeAlerts.length > 1 ? 's' : ''} · Click to respond
           </p>
-          <ShieldAlert size={18} className="text-[#ef4444]" />
+          <ShieldAlert size={18} style={{ color: '#ef4444' }} />
         </button>
       )}
 
       {/* KPI cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatCard
-          label="Total Users"
-          value={mockAdminStats.totalUsers.toLocaleString()}
-          icon={Users}
-          color="blue"
-          trend={8}
-        />
-        <StatCard
-          label="Active Drivers"
-          value={mockAdminStats.activeDrivers}
-          icon={Car}
-          color="green"
-          trend={3}
-        />
-        <StatCard
-          label="Active Rides"
-          value={mockAdminStats.activeRides}
-          icon={Navigation}
-          color="indigo"
-          trend={12}
-        />
-        <StatCard
-          label="Today's Revenue"
-          value={formatCurrency(mockAdminStats.todayRevenue)}
-          icon={IndianRupee}
-          color="navy"
-          trend={15}
-        />
+        <StatCard label="Total Users" value={mockAdminStats.totalUsers.toLocaleString()} icon={Users} color="blue" trend={8} />
+        <StatCard label="Active Drivers" value={mockAdminStats.activeDrivers} icon={Car} color="green" trend={3} />
+        <StatCard label="Active Rides" value={mockAdminStats.activeRides} icon={Navigation} color="indigo" trend={12} />
+        <StatCard label="Today's Revenue" value={formatCurrency(mockAdminStats.todayRevenue)} icon={IndianRupee} color="navy" trend={15} />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-5">
         {/* Revenue chart */}
-        <div className="bg-white rounded-2xl border border-[#e4e8f0] p-5">
+        <div style={{ ...glass, padding: 20 }}>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-[#0a0f1e]">Weekly Revenue</h2>
-            <span className="text-xs text-[#9ca3af]">This week</span>
+            <h2 className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.85)' }}>Weekly Revenue</h2>
+            <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>This week</span>
           </div>
-          <p className="text-2xl font-bold text-[#0a0f1e] mb-4">
+          <p className="text-2xl font-bold mb-4" style={{ color: 'rgba(255,255,255,0.92)' }}>
             {formatCurrency(revenueData.reduce((a, d) => a + d.value, 0))}
           </p>
           <MiniBarChart data={revenueData} />
         </div>
 
-        {/* System stats */}
-        <div className="bg-white rounded-2xl border border-[#e4e8f0] p-5">
-          <h2 className="text-sm font-semibold text-[#0a0f1e] mb-4">Platform Health</h2>
+        {/* Platform health */}
+        <div style={{ ...glass, padding: 20 }}>
+          <h2 className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.85)' }}>Platform Health</h2>
           <div className="space-y-3">
             {[
               { label: 'Total Rides (All time)', value: mockAdminStats.totalRides.toLocaleString() },
@@ -123,9 +114,16 @@ export default function AdminDashboard() {
               { label: 'SOS Alerts Resolved', value: mockAdminStats.resolvedSOS },
               { label: 'Active SOS Alerts', value: mockAdminStats.activeSOS, alert: true },
             ].map(({ label, value, alert }) => (
-              <div key={label} className="flex items-center justify-between py-2 border-b border-[#f0f2f8] last:border-0">
-                <span className="text-sm text-[#4b5563]">{label}</span>
-                <span className={`text-sm font-semibold ${alert && value > 0 ? 'text-[#ef4444]' : 'text-[#0a0f1e]'}`}>
+              <div
+                key={label}
+                className="flex items-center justify-between py-2"
+                style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+              >
+                <span className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>{label}</span>
+                <span
+                  className="text-sm font-semibold"
+                  style={{ color: alert && value > 0 ? '#f87171' : 'rgba(255,255,255,0.85)' }}
+                >
                   {value}
                 </span>
               </div>
@@ -135,12 +133,16 @@ export default function AdminDashboard() {
       </div>
 
       {/* Recent rides table */}
-      <div className="bg-white rounded-2xl border border-[#e4e8f0] overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#f0f2f8]">
-          <h2 className="text-sm font-semibold text-[#0a0f1e]">Recent Rides</h2>
+      <div style={{ ...glass, overflow: 'hidden' }}>
+        <div
+          className="flex items-center justify-between px-5 py-4"
+          style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+        >
+          <h2 className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.85)' }}>Recent Rides</h2>
           <button
             onClick={() => navigate('/admin/rides')}
-            className="text-xs text-[#3b6ef8] font-medium hover:underline"
+            className="text-xs font-medium hover:underline"
+            style={{ color: '#5b8eff', background: 'none', border: 'none', cursor: 'pointer' }}
           >
             View all
           </button>
@@ -148,9 +150,13 @@ export default function AdminDashboard() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#f0f2f8] bg-[#f8f9fc]">
+              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
                 {['Ride ID', 'Customer', 'Driver', 'Route', 'Fare', 'Status'].map(h => (
-                  <th key={h} className="text-left px-5 py-2.5 text-xs font-medium text-[#9ca3af] uppercase tracking-wide">
+                  <th
+                    key={h}
+                    className="text-left px-5 py-2.5 text-xs font-medium uppercase tracking-wide"
+                    style={{ color: 'rgba(255,255,255,0.3)' }}
+                  >
                     {h}
                   </th>
                 ))}
@@ -158,14 +164,23 @@ export default function AdminDashboard() {
             </thead>
             <tbody>
               {recentRides.map(ride => (
-                <tr key={ride.id} className="border-b border-[#f0f2f8] last:border-0 hover:bg-[#f8f9fc] transition-colors">
-                  <td className="px-5 py-3 font-mono text-xs text-[#9ca3af]">{ride.id.toUpperCase()}</td>
-                  <td className="px-5 py-3 text-[#0a0f1e] font-medium">{ride.customerName}</td>
-                  <td className="px-5 py-3 text-[#4b5563]">{ride.driverName}</td>
-                  <td className="px-5 py-3 text-[#4b5563] max-w-[160px] truncate">
+                <tr
+                  key={ride.id}
+                  style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.025)'}
+                  onMouseLeave={e => e.currentTarget.style.background = ''}
+                >
+                  <td className="px-5 py-3 font-mono text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                    {ride.id.toUpperCase()}
+                  </td>
+                  <td className="px-5 py-3 font-medium" style={{ color: 'rgba(255,255,255,0.85)' }}>{ride.customerName}</td>
+                  <td className="px-5 py-3" style={{ color: 'rgba(255,255,255,0.5)' }}>{ride.driverName}</td>
+                  <td className="px-5 py-3 max-w-[160px] truncate" style={{ color: 'rgba(255,255,255,0.45)' }}>
                     {ride.pickup} → {ride.destination}
                   </td>
-                  <td className="px-5 py-3 font-medium text-[#0a0f1e]">{formatCurrency(ride.total)}</td>
+                  <td className="px-5 py-3 font-medium" style={{ color: 'rgba(255,255,255,0.85)' }}>
+                    {formatCurrency(ride.total)}
+                  </td>
                   <td className="px-5 py-3">
                     <StatusBadge status={ride.status} />
                   </td>
@@ -177,27 +192,35 @@ export default function AdminDashboard() {
       </div>
 
       {/* System activity */}
-      <div className="bg-white rounded-2xl border border-[#e4e8f0] p-5">
+      <div style={{ ...glass, padding: 20 }}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Activity size={16} className="text-[#3b6ef8]" />
-            <h2 className="text-sm font-semibold text-[#0a0f1e]">Recent Activity</h2>
+            <Activity size={16} style={{ color: '#5b8eff' }} />
+            <h2 className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.85)' }}>Recent Activity</h2>
           </div>
-          <button onClick={() => navigate('/admin/activity')} className="text-xs text-[#3b6ef8] font-medium hover:underline">
+          <button
+            onClick={() => navigate('/admin/activity')}
+            style={{ fontSize: 12, fontWeight: 600, color: '#5b8eff', background: 'none', border: 'none', cursor: 'pointer' }}
+          >
             View all
           </button>
         </div>
         <div className="space-y-3">
           {mockSystemActivity.slice(0, 5).map(act => (
             <div key={act.id} className="flex items-start gap-3">
-              <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
-                act.type === 'sos' ? 'bg-[#ef4444]' :
-                act.type === 'booking' ? 'bg-[#3b6ef8]' :
-                act.type === 'payment' ? 'bg-[#10b981]' : 'bg-[#9ca3af]'
-              }`} />
+              <div
+                className="w-2 h-2 rounded-full mt-1.5 shrink-0"
+                style={{
+                  background:
+                    act.type === 'sos' ? '#ef4444' :
+                    act.type === 'booking' ? '#4f7eff' :
+                    act.type === 'payment' ? '#10b981' :
+                    'rgba(255,255,255,0.2)',
+                }}
+              />
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-[#0a0f1e]">{act.message}</p>
-                <p className="text-xs text-[#9ca3af]">{act.time} · {act.date}</p>
+                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.75)' }}>{act.message}</p>
+                <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>{act.time} · {act.date}</p>
               </div>
             </div>
           ))}

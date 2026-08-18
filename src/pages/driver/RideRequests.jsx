@@ -9,14 +9,18 @@ export default function RideRequests() {
   const navigate = useNavigate();
   const [requests, setRequests] = useState(mockRideRequests);
 
-  const handleAccept = (reqId) => navigate('/driver/ride/r5');
+  const handleAccept = () => navigate('/driver/ride/r5');
   const handleReject = (reqId) => setRequests(r => r.filter(req => req.id !== reqId));
 
   return (
     <div className="max-w-xl mx-auto px-4 sm:px-6 py-6 space-y-4">
       <div>
-        <h1 className="text-2xl font-bold text-[#0a0f1e]">Ride Requests</h1>
-        <p className="text-sm text-[#9ca3af] mt-0.5">{requests.length} pending request{requests.length !== 1 ? 's' : ''}</p>
+        <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
+          Ride Requests
+        </h1>
+        <p className="text-sm mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>
+          {requests.length} pending request{requests.length !== 1 ? 's' : ''}
+        </p>
       </div>
       {requests.length === 0 ? (
         <EmptyState

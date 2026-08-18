@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff, ChevronRight, Car, User, Settings } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ChevronRight, Car, User, Settings, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { RideSphereLogoMark } from '../../components/layout/Navbar';
 import Button from '../../components/common/Button';
@@ -15,8 +15,8 @@ const roles = [
 // Demo hints
 const hints = {
   customer: { email: 'abhay@example.com', password: 'password123' },
-  driver: { email: 'rajesh@example.com', password: 'password123' },
-  admin: { email: 'admin@ridesphere.in', password: 'admin123' },
+  driver:   { email: 'rajesh@example.com', password: 'password123' },
+  admin:    { email: 'admin@ridesphere.in', password: 'admin123' },
 };
 
 export default function Login() {
@@ -40,7 +40,7 @@ export default function Login() {
     setError('');
     if (!email || !password) { setError('Please fill in all fields.'); return; }
     setLoading(true);
-    await new Promise(r => setTimeout(r, 600)); // simulate async
+    await new Promise(r => setTimeout(r, 600));
     const result = login({ email, password, role });
     setLoading(false);
     if (!result.success) { setError(result.error); return; }
@@ -48,66 +48,106 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row">
+    <div
+      className="min-h-screen flex flex-col lg:flex-row"
+      style={{ background: '#05091a', fontFamily: 'Inter, system-ui, sans-serif' }}
+    >
       {/* Left panel */}
-      <div className="hidden lg:flex lg:w-[46%] bg-[#0a0f1e] flex-col justify-between p-12">
-        <Link to="/" className="flex items-center gap-2.5">
-          <RideSphereLogoMark size={30} />
-          <span className="text-lg font-bold text-white">
-            Ride<span className="text-[#3b6ef8]">Sphere</span>
-          </span>
-        </Link>
+      <div
+        className="hidden lg:flex lg:w-[46%] flex-col justify-between p-12 relative overflow-hidden"
+        style={{ background: '#07091f', borderRight: '1px solid rgba(255,255,255,0.06)' }}
+      >
+        {/* Decorative glows */}
+        <div style={{
+          position: 'absolute', top: -150, left: -150, width: 500, height: 500,
+          background: 'radial-gradient(circle, rgba(79,126,255,0.12) 0%, transparent 70%)',
+          borderRadius: '50%', pointerEvents: 'none',
+        }} />
+        <div style={{
+          position: 'absolute', bottom: -100, right: -100, width: 400, height: 400,
+          background: 'radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 70%)',
+          borderRadius: '50%', pointerEvents: 'none',
+        }} />
+        {/* Grid */}
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          backgroundImage: 'linear-gradient(rgba(79,126,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(79,126,255,0.03) 1px, transparent 1px)',
+          backgroundSize: '50px 50px',
+        }} />
 
-        <div>
-          <blockquote className="text-2xl font-semibold text-white leading-snug mb-4">
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+            <RideSphereLogoMark size={30} />
+            <span style={{ fontSize: 18, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>
+              Ride<span style={{ color: '#5b8eff' }}>Sphere</span>
+            </span>
+          </Link>
+        </div>
+
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <blockquote style={{ fontSize: 26, fontWeight: 700, color: '#fff', lineHeight: 1.3, marginBottom: 16, letterSpacing: '-0.02em' }}>
             "Every great journey starts with a single tap."
           </blockquote>
-          <p className="text-white/40 text-sm">
+          <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 14 }}>
             Smart rides. Safer journeys. Trusted by 50,000+ riders across Kerala.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, position: 'relative', zIndex: 1 }}>
           {['A', 'P', 'R', 'S'].map((l, i) => (
             <div
               key={i}
-              className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white"
-              style={{ background: ['#3b6ef8', '#10b981', '#6366f1', '#f59e0b'][i] }}
+              style={{
+                width: 32, height: 32, borderRadius: '50%',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 12, fontWeight: 700, color: '#fff',
+                background: ['rgba(79,126,255,0.7)', 'rgba(16,185,129,0.7)', 'rgba(99,102,241,0.7)', 'rgba(245,158,11,0.7)'][i],
+              }}
             >
               {l}
             </div>
           ))}
-          <p className="text-white/40 text-xs">50K+ riders trust RideSphere</p>
+          <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12 }}>50K+ riders trust RideSphere</p>
         </div>
       </div>
 
       {/* Right panel */}
-      <div className="flex-1 flex items-center justify-center p-6 sm:p-10 bg-[#f8f9fc]">
+      <div
+        className="flex-1 flex items-center justify-center p-6 sm:p-10"
+        style={{ background: '#05091a' }}
+      >
         <div className="w-full max-w-md">
           {/* Mobile logo */}
           <div className="flex justify-center mb-8 lg:hidden">
-            <Link to="/" className="flex items-center gap-2">
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
               <RideSphereLogoMark size={26} />
-              <span className="text-base font-bold text-[#0a0f1e]">
-                Ride<span className="text-[#3b6ef8]">Sphere</span>
+              <span style={{ fontSize: 16, fontWeight: 800, color: '#fff' }}>
+                Ride<span style={{ color: '#5b8eff' }}>Sphere</span>
               </span>
             </Link>
           </div>
 
-          <h1 className="text-2xl font-bold text-[#0a0f1e] mb-1.5">Welcome back</h1>
-          <p className="text-sm text-[#4b5563] mb-7">Sign in to your account to continue.</p>
+          <h1 style={{ fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 6, letterSpacing: '-0.02em' }}>
+            Welcome back
+          </h1>
+          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', marginBottom: 28 }}>
+            Sign in to your account to continue.
+          </p>
 
           {/* Role selector */}
-          <div className="grid grid-cols-3 gap-2 mb-6">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 20 }}>
             {roles.map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
                 onClick={() => { setRole(id); setError(''); }}
-                className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-xs font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3b6ef8]
-                  ${role === id
-                    ? 'border-[#3b6ef8] bg-[#3b6ef8]/5 text-[#3b6ef8]'
-                    : 'border-[#e4e8f0] bg-white text-[#4b5563] hover:border-[#3b6ef8]/40'
-                  }`}
+                style={{
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+                  padding: '12px 8px', borderRadius: 14, border: 'none', cursor: 'pointer',
+                  fontSize: 12, fontWeight: 600, transition: 'all 0.15s',
+                  background: role === id ? 'rgba(79,126,255,0.15)' : 'rgba(255,255,255,0.04)',
+                  color: role === id ? '#5b8eff' : 'rgba(255,255,255,0.45)',
+                  outline: role === id ? '1px solid rgba(79,126,255,0.4)' : '1px solid rgba(255,255,255,0.07)',
+                }}
               >
                 <Icon size={18} />
                 {label}
@@ -116,19 +156,29 @@ export default function Login() {
           </div>
 
           {/* Demo hint */}
-          <div className="flex items-center justify-between bg-blue-50 border border-blue-100 rounded-xl px-3 py-2.5 mb-5">
-            <p className="text-xs text-[#3b6ef8]">
-              Demo: <span className="font-mono">{hints[role].email}</span>
+          <div
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              background: 'rgba(79,126,255,0.08)', border: '1px solid rgba(79,126,255,0.2)',
+              borderRadius: 12, padding: '10px 14px', marginBottom: 20,
+            }}
+          >
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>
+              Demo: <span style={{ fontFamily: 'monospace', color: '#5b8eff' }}>{hints[role].email}</span>
             </p>
             <button
               onClick={handleFill}
-              className="text-xs font-semibold text-[#3b6ef8] underline underline-offset-2 hover:opacity-70 transition-opacity"
+              style={{
+                fontSize: 12, fontWeight: 600, color: '#5b8eff',
+                background: 'none', border: 'none', cursor: 'pointer',
+                textDecoration: 'underline', textUnderlineOffset: 2,
+              }}
             >
               Fill
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <Input
               label="Email or Phone"
               id="login-email"
@@ -152,15 +202,21 @@ export default function Login() {
             />
 
             {error && (
-              <p className="text-xs text-red-500 bg-red-50 border border-red-100 rounded-lg px-3 py-2">
+              <p
+                style={{
+                  fontSize: 13, color: '#f87171',
+                  background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)',
+                  borderRadius: 10, padding: '8px 12px',
+                }}
+              >
                 {error}
               </p>
             )}
 
-            <div className="flex justify-end">
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <button
                 type="button"
-                className="text-xs text-[#3b6ef8] hover:underline"
+                style={{ fontSize: 12, color: '#5b8eff', background: 'none', border: 'none', cursor: 'pointer' }}
                 onClick={() => alert('Password reset not implemented in demo.')}
               >
                 Forgot password?
@@ -173,9 +229,9 @@ export default function Login() {
             </Button>
           </form>
 
-          <p className="text-center text-sm text-[#4b5563] mt-5">
-            Don't have an account?{' '}
-            <Link to="/register" className="text-[#3b6ef8] font-medium hover:underline">
+          <p style={{ textAlign: 'center', fontSize: 14, color: 'rgba(255,255,255,0.35)', marginTop: 20 }}>
+            Don&apos;t have an account?{' '}
+            <Link to="/register" style={{ color: '#5b8eff', fontWeight: 600, textDecoration: 'none' }}>
               Create one
             </Link>
           </p>

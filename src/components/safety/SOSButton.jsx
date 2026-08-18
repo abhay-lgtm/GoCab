@@ -9,18 +9,24 @@ export default function SOSButton({ onClick, className = '' }) {
     <button
       onClick={onClick}
       aria-label="SOS Emergency"
-      className={`
-        relative group flex items-center justify-center gap-2
-        bg-white border-2 border-[#ef4444] text-[#ef4444]
-        font-bold text-sm tracking-widest uppercase
-        rounded-2xl px-6 py-3
-        hover:bg-[#ef4444] hover:text-white
-        active:scale-95
-        transition-all duration-200
-        shadow-sm hover:shadow-md hover:shadow-red-200
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2
-        ${className}
-      `}
+      className={`relative flex items-center justify-center gap-2 font-bold text-sm tracking-widest uppercase rounded-2xl px-8 py-3.5 transition-all duration-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 ${className}`}
+      style={{
+        background: 'rgba(239,68,68,0.1)',
+        border: '2px solid rgba(239,68,68,0.5)',
+        color: '#f87171',
+        boxShadow: '0 0 30px rgba(239,68,68,0.15)',
+        focusRingOffsetColor: '#05091a',
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.background = 'rgba(239,68,68,0.2)';
+        e.currentTarget.style.borderColor = '#ef4444';
+        e.currentTarget.style.boxShadow = '0 0 40px rgba(239,68,68,0.3)';
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.background = 'rgba(239,68,68,0.1)';
+        e.currentTarget.style.borderColor = 'rgba(239,68,68,0.5)';
+        e.currentTarget.style.boxShadow = '0 0 30px rgba(239,68,68,0.15)';
+      }}
     >
       <AlertTriangle size={18} />
       SOS

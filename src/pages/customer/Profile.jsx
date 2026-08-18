@@ -6,6 +6,13 @@ import { mockUsers } from '../../data/mockData';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
 
+const glass = {
+  background: 'rgba(255,255,255,0.04)',
+  border: '1px solid rgba(255,255,255,0.08)',
+  borderRadius: 20,
+  padding: 20,
+};
+
 export default function CustomerProfile() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -22,22 +29,27 @@ export default function CustomerProfile() {
 
   return (
     <div className="max-w-xl mx-auto px-4 sm:px-6 py-6 space-y-5">
-      <h1 className="text-2xl font-bold text-[#0a0f1e]">Profile</h1>
+      <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
+        Profile
+      </h1>
 
       {/* Avatar */}
       <div className="flex items-center gap-4">
-        <div className="w-16 h-16 rounded-2xl bg-[#0a0f1e] flex items-center justify-center">
+        <div
+          className="w-16 h-16 rounded-2xl flex items-center justify-center"
+          style={{ background: 'linear-gradient(135deg, #4f7eff 0%, #3b5ce4 100%)' }}
+        >
           <span className="text-2xl font-bold text-white">{data.name.charAt(0)}</span>
         </div>
         <div>
-          <p className="font-semibold text-[#0a0f1e]">{data.name}</p>
-          <p className="text-sm text-[#9ca3af]">{data.totalRides} total rides</p>
+          <p className="font-semibold" style={{ color: 'rgba(255,255,255,0.9)' }}>{data.name}</p>
+          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>{data.totalRides} total rides</p>
         </div>
       </div>
 
       {/* Edit form */}
-      <div className="bg-white rounded-2xl border border-[#e4e8f0] p-5 space-y-4">
-        <h2 className="text-sm font-semibold text-[#0a0f1e]">Personal Details</h2>
+      <div style={{ ...glass, display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <h2 className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.85)' }}>Personal Details</h2>
         <Input label="Full Name" id="prof-name" value={name} onChange={e => setName(e.target.value)} />
         <Input label="Email" id="prof-email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
         <Input label="Phone" id="prof-phone" type="tel" value={phone} onChange={e => setPhone(e.target.value)} />
@@ -50,12 +62,12 @@ export default function CustomerProfile() {
       <div className="grid grid-cols-3 gap-3">
         {[
           { label: 'Total Rides', value: data.totalRides },
-          { label: 'Saved Locations', value: data.savedLocations.length },
-          { label: 'Emergency Contacts', value: data.emergencyContacts.length },
+          { label: 'Saved Locations', value: data.savedLocations?.length || 0 },
+          { label: 'Emergency Contacts', value: data.emergencyContacts?.length || 0 },
         ].map(({ label, value }) => (
-          <div key={label} className="bg-white rounded-2xl border border-[#e4e8f0] p-3 text-center">
-            <p className="text-xl font-bold text-[#0a0f1e]">{value}</p>
-            <p className="text-xs text-[#9ca3af] mt-0.5">{label}</p>
+          <div key={label} className="rounded-2xl p-3 text-center" style={glass}>
+            <p className="text-xl font-bold" style={{ color: 'rgba(255,255,255,0.92)' }}>{value}</p>
+            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>{label}</p>
           </div>
         ))}
       </div>

@@ -1,35 +1,59 @@
 import { clsx } from 'clsx';
 
 export default function StatCard({ label, value, icon: Icon, trend, color = 'blue', description }) {
-  const colors = {
-    blue: { bg: 'bg-blue-50', icon: 'text-[#3b6ef8]', iconBg: 'bg-[#3b6ef8]/10' },
-    green: { bg: 'bg-emerald-50', icon: 'text-[#10b981]', iconBg: 'bg-emerald-100' },
-    red: { bg: 'bg-red-50', icon: 'text-[#ef4444]', iconBg: 'bg-red-100' },
-    indigo: { bg: 'bg-indigo-50', icon: 'text-indigo-600', iconBg: 'bg-indigo-100' },
-    navy: { bg: 'bg-[#0a0f1e]/5', icon: 'text-[#0a0f1e]', iconBg: 'bg-[#0a0f1e]/10' },
+  const iconColors = {
+    blue:   { icon: '#5b8eff', bg: 'rgba(79,126,255,0.15)' },
+    green:  { icon: '#10b981', bg: 'rgba(16,185,129,0.15)' },
+    red:    { icon: '#f87171', bg: 'rgba(239,68,68,0.15)' },
+    indigo: { icon: '#818cf8', bg: 'rgba(99,102,241,0.15)' },
+    navy:   { icon: 'rgba(255,255,255,0.6)', bg: 'rgba(255,255,255,0.08)' },
+    amber:  { icon: '#fbbf24', bg: 'rgba(245,158,11,0.15)' },
   };
-  const c = colors[color] || colors.blue;
+  const c = iconColors[color] || iconColors.blue;
 
   return (
-    <div className="bg-white rounded-2xl border border-[#e4e8f0] p-5 hover:border-[#3b6ef8]/30 hover:shadow-sm transition-all duration-200">
+    <div
+      className="rounded-2xl p-5 transition-all duration-200"
+      style={{
+        background: 'rgba(255,255,255,0.04)',
+        border: '1px solid rgba(255,255,255,0.08)',
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.borderColor = 'rgba(79,126,255,0.25)';
+        e.currentTarget.style.background = 'rgba(255,255,255,0.06)';
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
+        e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+      }}
+    >
       <div className="flex items-start justify-between mb-3">
-        <div className={`w-10 h-10 rounded-xl ${c.iconBg} flex items-center justify-center`}>
-          {Icon && <Icon size={20} className={c.icon} />}
+        <div
+          className="w-10 h-10 rounded-xl flex items-center justify-center"
+          style={{ background: c.bg }}
+        >
+          {Icon && <Icon size={20} style={{ color: c.icon }} />}
         </div>
         {trend !== undefined && (
           <span
-            className={clsx(
-              'text-xs font-medium px-2 py-0.5 rounded-lg',
-              trend >= 0 ? 'text-emerald-700 bg-emerald-50' : 'text-red-600 bg-red-50'
-            )}
+            className="text-xs font-medium px-2 py-0.5 rounded-lg"
+            style={
+              trend >= 0
+                ? { color: '#10b981', background: 'rgba(16,185,129,0.12)' }
+                : { color: '#f87171', background: 'rgba(239,68,68,0.12)' }
+            }
           >
             {trend >= 0 ? '+' : ''}{trend}%
           </span>
         )}
       </div>
-      <p className="text-2xl font-bold text-[#0a0f1e] tabular-nums">{value}</p>
-      <p className="text-sm text-[#4b5563] mt-0.5">{label}</p>
-      {description && <p className="text-xs text-[#9ca3af] mt-1">{description}</p>}
+      <p className="text-2xl font-bold tabular-nums" style={{ color: 'rgba(255,255,255,0.92)' }}>
+        {value}
+      </p>
+      <p className="text-sm mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>{label}</p>
+      {description && (
+        <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.25)' }}>{description}</p>
+      )}
     </div>
   );
 }

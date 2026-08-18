@@ -54,44 +54,80 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row">
+    <div
+      className="min-h-screen flex flex-col lg:flex-row"
+      style={{ background: '#05091a', fontFamily: 'Inter, system-ui, sans-serif' }}
+    >
       {/* Left panel */}
-      <div className="hidden lg:flex lg:w-[38%] bg-[#0a0f1e] flex-col justify-between p-12">
-        <Link to="/" className="flex items-center gap-2.5">
-          <RideSphereLogoMark size={30} />
-          <span className="text-lg font-bold text-white">
-            Ride<span className="text-[#3b6ef8]">Sphere</span>
-          </span>
-        </Link>
-        <div>
-          <h2 className="text-2xl font-bold text-white mb-4">
+      <div
+        className="hidden lg:flex lg:w-[38%] flex-col justify-between p-12 relative overflow-hidden"
+        style={{ background: '#07091f', borderRight: '1px solid rgba(255,255,255,0.06)' }}
+      >
+        {/* Decorative glows */}
+        <div style={{
+          position: 'absolute', top: -100, right: -100, width: 450, height: 450,
+          background: 'radial-gradient(circle, rgba(167,139,250,0.1) 0%, transparent 70%)',
+          borderRadius: '50%', pointerEvents: 'none',
+        }} />
+        <div style={{
+          position: 'absolute', bottom: -80, left: -80, width: 350, height: 350,
+          background: 'radial-gradient(circle, rgba(79,126,255,0.08) 0%, transparent 70%)',
+          borderRadius: '50%', pointerEvents: 'none',
+        }} />
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          backgroundImage: 'linear-gradient(rgba(79,126,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(79,126,255,0.025) 1px, transparent 1px)',
+          backgroundSize: '50px 50px',
+        }} />
+
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+            <RideSphereLogoMark size={30} />
+            <span style={{ fontSize: 18, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>
+              Ride<span style={{ color: '#5b8eff' }}>Sphere</span>
+            </span>
+          </Link>
+        </div>
+
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <h2 style={{ fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 16, lineHeight: 1.2, letterSpacing: '-0.02em' }}>
             Join the smarter way to travel.
           </h2>
-          <p className="text-white/40 text-sm leading-relaxed">
+          <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 14, lineHeight: 1.7 }}>
             Thousands of riders and drivers trust RideSphere every day. Create your free account and get started in minutes.
           </p>
         </div>
-        <p className="text-white/20 text-xs">© 2024 RideSphere</p>
+
+        <p style={{ color: 'rgba(255,255,255,0.18)', fontSize: 12, position: 'relative', zIndex: 1 }}>
+          &copy; 2024 RideSphere
+        </p>
       </div>
 
       {/* Form panel */}
-      <div className="flex-1 overflow-y-auto bg-[#f8f9fc]">
+      <div
+        className="flex-1 overflow-y-auto"
+        style={{ background: '#05091a' }}
+      >
         <div className="max-w-lg mx-auto px-6 py-10">
           {/* Mobile logo */}
           <div className="flex justify-center mb-6 lg:hidden">
-            <Link to="/" className="flex items-center gap-2">
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
               <RideSphereLogoMark size={24} />
-              <span className="text-sm font-bold text-[#0a0f1e]">
-                Ride<span className="text-[#3b6ef8]">Sphere</span>
+              <span style={{ fontSize: 14, fontWeight: 800, color: '#fff' }}>
+                Ride<span style={{ color: '#5b8eff' }}>Sphere</span>
               </span>
             </Link>
           </div>
 
-          <h1 className="text-2xl font-bold text-[#0a0f1e] mb-1.5">Create your account</h1>
-          <p className="text-sm text-[#4b5563] mb-6">Quick and free. No credit card required.</p>
+          <h1 style={{ fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 6, letterSpacing: '-0.02em' }}>
+            Create your account
+          </h1>
+          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)', marginBottom: 24 }}>
+            Quick and free. No credit card required.
+          </p>
 
           {/* Role selector */}
-          <div className="grid grid-cols-2 gap-2 mb-6">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 24 }}>
             {[
               { id: 'customer', label: 'I need rides', icon: User },
               { id: 'driver', label: 'I drive', icon: Car },
@@ -99,11 +135,14 @@ export default function Register() {
               <button
                 key={id}
                 onClick={() => setRole(id)}
-                className={`flex items-center justify-center gap-2 p-3.5 rounded-xl border text-sm font-medium transition-all duration-150
-                  ${role === id
-                    ? 'border-[#3b6ef8] bg-[#3b6ef8]/5 text-[#3b6ef8]'
-                    : 'border-[#e4e8f0] bg-white text-[#4b5563] hover:border-[#3b6ef8]/40'
-                  }`}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                  padding: '14px', borderRadius: 14, border: 'none', cursor: 'pointer',
+                  fontSize: 14, fontWeight: 600, transition: 'all 0.15s',
+                  background: role === id ? 'rgba(79,126,255,0.15)' : 'rgba(255,255,255,0.04)',
+                  color: role === id ? '#5b8eff' : 'rgba(255,255,255,0.45)',
+                  outline: role === id ? '1px solid rgba(79,126,255,0.4)' : '1px solid rgba(255,255,255,0.07)',
+                }}
               >
                 <Icon size={17} />
                 {label}
@@ -111,8 +150,7 @@ export default function Register() {
             ))}
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-            {/* Common fields */}
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }} noValidate>
             <Input
               label="Full Name"
               id="reg-name"
@@ -165,20 +203,26 @@ export default function Register() {
             />
 
             {/* Show password toggle */}
-            <label className="flex items-center gap-2 cursor-pointer">
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
               <input
                 type="checkbox"
                 checked={showPassword}
                 onChange={e => setShowPassword(e.target.checked)}
-                className="rounded border-[#e4e8f0] text-[#3b6ef8] focus:ring-[#3b6ef8]"
+                style={{ accentColor: '#4f7eff', width: 14, height: 14 }}
               />
-              <span className="text-xs text-[#4b5563]">Show password</span>
+              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>Show password</span>
             </label>
 
             {/* Driver-only fields */}
             {role === 'driver' && (
-              <div className="space-y-4 pt-2 border-t border-[#e4e8f0]">
-                <p className="text-xs font-semibold text-[#0a0f1e] uppercase tracking-wide pt-1">
+              <div
+                style={{
+                  display: 'flex', flexDirection: 'column', gap: 14,
+                  paddingTop: 16, marginTop: 4,
+                  borderTop: '1px solid rgba(255,255,255,0.07)',
+                }}
+              >
+                <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                   Driver Details
                 </p>
                 <Input
@@ -201,31 +245,40 @@ export default function Register() {
                   onChange={set('vehicleNumber')}
                   error={errors.vehicleNumber}
                 />
-                <div className="flex flex-col gap-1.5">
-                  <label htmlFor="reg-vehicle-type" className="text-sm font-medium text-[#0a0f1e]">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  <label
+                    htmlFor="reg-vehicle-type"
+                    style={{ fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.65)' }}
+                  >
                     Vehicle Type
                   </label>
                   <select
                     id="reg-vehicle-type"
                     value={form.vehicleType}
                     onChange={set('vehicleType')}
-                    className="h-11 rounded-xl border border-[#e4e8f0] bg-white text-sm text-[#0a0f1e] px-3.5 focus:outline-none focus:border-[#3b6ef8] focus:ring-2 focus:ring-[#3b6ef8]/10 transition-all"
+                    style={{
+                      height: 44, borderRadius: 12, fontSize: 14, padding: '0 14px',
+                      background: 'rgba(255,255,255,0.06)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      color: 'rgba(255,255,255,0.85)',
+                      outline: 'none',
+                    }}
                   >
-                    {vehicleTypes.map(v => <option key={v}>{v}</option>)}
+                    {vehicleTypes.map(v => <option key={v} style={{ background: '#0a0f1e' }}>{v}</option>)}
                   </select>
                 </div>
               </div>
             )}
 
-            <Button type="submit" variant="primary" fullWidth size="lg" loading={loading} className="mt-2">
+            <Button type="submit" variant="primary" fullWidth size="lg" loading={loading} style={{ marginTop: 8 }}>
               Create Account
               <ChevronRight size={18} />
             </Button>
           </form>
 
-          <p className="text-center text-sm text-[#4b5563] mt-5">
+          <p style={{ textAlign: 'center', fontSize: 14, color: 'rgba(255,255,255,0.35)', marginTop: 20 }}>
             Already have an account?{' '}
-            <Link to="/login" className="text-[#3b6ef8] font-medium hover:underline">
+            <Link to="/login" style={{ color: '#5b8eff', fontWeight: 600, textDecoration: 'none' }}>
               Sign in
             </Link>
           </p>

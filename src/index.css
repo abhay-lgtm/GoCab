@@ -10,17 +10,17 @@
   --color-surface: #f8f9fc;
   --color-surface-2: #f0f2f8;
   --color-border: #e4e8f0;
-  --color-accent: #3b6ef8;
-  --color-accent-dark: #2555d4;
+  --color-accent: #4f7eff;
+  --color-accent-dark: #3b5ce4;
   --color-accent-light: #6b97ff;
   --color-indigo: #6366f1;
   --color-safety: #10b981;
   --color-safety-light: #d1fae5;
   --color-sos: #ef4444;
   --color-sos-light: #fee2e2;
-  --color-text-primary: #0a0f1e;
-  --color-text-secondary: #4b5563;
-  --color-text-muted: #9ca3af;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: rgba(255,255,255,0.6);
+  --color-text-muted: rgba(255,255,255,0.35);
   --font-sans: 'Inter', system-ui, sans-serif;
   --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
@@ -37,31 +37,31 @@ html {
 
 body {
   font-family: 'Inter', system-ui, sans-serif;
-  background-color: #f8f9fc;
-  color: #0a0f1e;
+  background-color: #05091a;
+  color: rgba(255, 255, 255, 0.9);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar */
+/* Dark custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #f0f2f8;
+  background: rgba(255,255,255,0.03);
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: rgba(255,255,255,0.12);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: rgba(255,255,255,0.22);
 }
 
 /* Focus ring */
 *:focus-visible {
-  outline: 2px solid #3b6ef8;
+  outline: 2px solid #4f7eff;
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -102,6 +102,11 @@ body {
   to { transform: translateX(0); opacity: 1; }
 }
 
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.8; }
+  75%, 100% { transform: scale(2); opacity: 0; }
+}
+
 .animate-voice-pulse {
   animation: voicePulse 2s ease-in-out infinite;
 }
@@ -130,23 +135,54 @@ body {
   animation: toastIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Map placeholder grid */
+/* Dark map placeholder grid */
 .map-grid {
   background-image:
-    linear-gradient(rgba(59, 110, 248, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(59, 110, 248, 0.06) 1px, transparent 1px);
+    linear-gradient(rgba(79, 126, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79, 126, 255, 0.08) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
-/* Glass card */
+/* Dark glass card */
 .glass-card {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(228, 232, 240, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Glass card panel (stronger) */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 /* Page transition */
 .page-enter {
   animation: slideInUp 0.25s ease-out;
+}
+
+/* Dark input placeholder */
+input::placeholder,
+textarea::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* Dark select */
+select {
+  cursor: pointer;
+}
+
+select option {
+  background: #0d1326;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Dark focus ring for inputs */
+input:focus,
+select:focus,
+textarea:focus {
+  box-shadow: 0 0 0 2px rgba(79, 126, 255, 0.35) !important;
 }

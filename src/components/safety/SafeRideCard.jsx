@@ -11,33 +11,35 @@ const benefits = [
 export default function SafeRideCard({ enabled, onToggle, compact = false }) {
   return (
     <div
-      className={clsx(
-        'rounded-2xl border transition-all duration-200',
-        enabled
-          ? 'bg-emerald-50 border-emerald-200'
-          : 'bg-white border-[#e4e8f0]'
-      )}
+      className="rounded-2xl transition-all duration-200"
+      style={{
+        background: enabled ? 'rgba(16,185,129,0.08)' : 'rgba(255,255,255,0.04)',
+        border: enabled ? '1px solid rgba(16,185,129,0.25)' : '1px solid rgba(255,255,255,0.08)',
+      }}
     >
       <div className="flex items-start justify-between gap-4 p-4">
         <div className="flex items-center gap-3">
           <div
-            className={clsx(
-              'w-10 h-10 rounded-xl flex items-center justify-center shrink-0',
-              enabled ? 'bg-[#10b981]' : 'bg-[#f0f2f8]'
-            )}
+            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+            style={{ background: enabled ? '#10b981' : 'rgba(255,255,255,0.07)' }}
           >
-            <ShieldCheck size={20} className={enabled ? 'text-white' : 'text-[#9ca3af]'} />
+            <ShieldCheck size={20} className={enabled ? 'text-white' : ''} style={enabled ? {} : { color: 'rgba(255,255,255,0.3)' }} />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <p className="text-sm font-semibold text-[#0a0f1e]">SafeRide Mode</p>
+              <p className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.9)' }}>SafeRide Mode</p>
               {enabled && (
-                <span className="text-xs font-medium text-[#10b981] bg-emerald-100 px-1.5 py-0.5 rounded-md">
+                <span
+                  className="text-xs font-medium px-1.5 py-0.5 rounded-md"
+                  style={{ color: '#10b981', background: 'rgba(16,185,129,0.15)' }}
+                >
                   Active
                 </span>
               )}
             </div>
-            <p className="text-xs text-[#4b5563] mt-0.5">Extra protection for your journey</p>
+            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              Extra protection for your journey
+            </p>
           </div>
         </div>
 
@@ -46,10 +48,11 @@ export default function SafeRideCard({ enabled, onToggle, compact = false }) {
           onClick={onToggle}
           aria-pressed={enabled}
           aria-label="Toggle SafeRide mode"
-          className={clsx(
-            'relative w-11 h-6 rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#10b981] focus-visible:ring-offset-2 shrink-0 mt-1',
-            enabled ? 'bg-[#10b981]' : 'bg-[#e4e8f0]'
-          )}
+          className="relative w-11 h-6 rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#10b981] focus-visible:ring-offset-2 shrink-0 mt-1"
+          style={{
+            background: enabled ? '#10b981' : 'rgba(255,255,255,0.12)',
+            focusRingOffset: '#05091a',
+          }}
         >
           <span
             className={clsx(
@@ -60,7 +63,7 @@ export default function SafeRideCard({ enabled, onToggle, compact = false }) {
         </button>
       </div>
 
-      {/* Benefits — shown when enabled or not compact */}
+      {/* Benefits */}
       {!compact && (
         <div className="px-4 pb-4">
           <ul className="grid grid-cols-1 gap-1.5">
@@ -68,9 +71,14 @@ export default function SafeRideCard({ enabled, onToggle, compact = false }) {
               <li key={b} className="flex items-center gap-2">
                 <CheckCircle
                   size={14}
-                  className={enabled ? 'text-[#10b981]' : 'text-[#9ca3af]'}
+                  style={{ color: enabled ? '#10b981' : 'rgba(255,255,255,0.2)' }}
                 />
-                <span className={`text-xs ${enabled ? 'text-emerald-800' : 'text-[#9ca3af]'}`}>{b}</span>
+                <span
+                  className="text-xs"
+                  style={{ color: enabled ? 'rgba(110,231,183,0.9)' : 'rgba(255,255,255,0.3)' }}
+                >
+                  {b}
+                </span>
               </li>
             ))}
           </ul>

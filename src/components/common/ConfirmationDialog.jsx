@@ -16,12 +16,20 @@ export default function ConfirmationDialog({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-fade-in"
+        className="absolute inset-0 animate-fade-in"
+        style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}
         onClick={onCancel}
       />
-      <div className="relative bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full animate-slide-up">
-        <h3 className="text-base font-semibold text-[#0a0f1e] mb-2">{title}</h3>
-        <p className="text-sm text-[#4b5563] mb-6 leading-relaxed">{message}</p>
+      <div
+        className="relative rounded-2xl shadow-2xl p-6 max-w-sm w-full animate-slide-up"
+        style={{
+          background: 'rgba(10,15,30,0.96)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          backdropFilter: 'blur(20px)',
+        }}
+      >
+        <h3 className="text-base font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.9)' }}>{title}</h3>
+        <p className="text-sm leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.5)' }}>{message}</p>
         <div className="flex gap-3">
           <Button variant="secondary" fullWidth onClick={onCancel} disabled={loading}>
             {cancelLabel}

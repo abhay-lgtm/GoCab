@@ -7,10 +7,17 @@ import Button from '../../components/common/Button';
 import { formatCurrency } from '../../utils/formatCurrency';
 
 const driverOptions = [
-  { id: 'any', label: 'Any Available Driver', desc: 'Fastest match' },
-  { id: 'verified', label: 'Verified Drivers Only', desc: 'SafeRide preference' },
-  { id: 'rated', label: 'Top Rated (4.5★+)', desc: 'Highest-rated drivers' },
+  { id: 'any',      label: 'Any Available Driver',   desc: 'Fastest match' },
+  { id: 'verified', label: 'Verified Drivers Only',  desc: 'SafeRide preference' },
+  { id: 'rated',    label: 'Top Rated (4.5★+)',      desc: 'Highest-rated drivers' },
 ];
+
+const glass = {
+  background: 'rgba(255,255,255,0.04)',
+  border: '1px solid rgba(255,255,255,0.08)',
+  borderRadius: 20,
+  padding: 20,
+};
 
 export default function RideConfirmation() {
   const navigate = useNavigate();
@@ -36,97 +43,127 @@ export default function RideConfirmation() {
   return (
     <div className="max-w-xl mx-auto px-4 sm:px-6 py-6 space-y-4">
       <div>
-        <h1 className="text-2xl font-bold text-[#0a0f1e]">Confirm Your Ride</h1>
-        <p className="text-sm text-[#9ca3af] mt-0.5">Review details before booking.</p>
+        <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
+          Confirm Your Ride
+        </h1>
+        <p className="text-sm mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>Review details before booking.</p>
       </div>
 
       {/* Route summary */}
-      <div className="bg-white rounded-2xl border border-[#e4e8f0] p-5">
+      <div style={glass}>
         <div className="space-y-3">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0">
-              <MapPin size={14} className="text-[#10b981]" />
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+              style={{ background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.2)' }}
+            >
+              <MapPin size={14} style={{ color: '#10b981' }} />
             </div>
             <div>
-              <p className="text-xs text-[#9ca3af]">Pickup</p>
-              <p className="text-sm font-semibold text-[#0a0f1e]">{state.pickup}</p>
+              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Pickup</p>
+              <p className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.9)' }}>{state.pickup}</p>
             </div>
           </div>
-          <div className="ml-4 border-l-2 border-dashed border-[#e4e8f0] h-4" />
+          <div className="ml-4 border-l-2 border-dashed h-4" style={{ borderColor: 'rgba(255,255,255,0.1)' }} />
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center shrink-0">
-              <Navigation size={14} className="text-[#3b6ef8]" />
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+              style={{ background: 'rgba(79,126,255,0.15)', border: '1px solid rgba(79,126,255,0.2)' }}
+            >
+              <Navigation size={14} style={{ color: '#5b8eff' }} />
             </div>
             <div>
-              <p className="text-xs text-[#9ca3af]">Destination</p>
-              <p className="text-sm font-semibold text-[#0a0f1e]">{state.destination}</p>
+              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Destination</p>
+              <p className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.9)' }}>{state.destination}</p>
             </div>
           </div>
         </div>
 
-        <div className="flex gap-4 mt-4 pt-4 border-t border-[#f0f2f8]">
-          <div className="flex items-center gap-1.5 text-xs text-[#4b5563]">
-            <Clock size={13} />
-            ~28 min
-          </div>
-          <div className="flex items-center gap-1.5 text-xs text-[#4b5563]">
-            <Car size={13} />
-            12.4 km
-          </div>
-          <div className="flex items-center gap-1.5 text-xs font-medium text-[#0a0f1e]">
-            <ShieldCheck size={13} className="text-[#10b981]" />
+        <div
+          className="flex gap-4 mt-4 pt-4"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}
+        >
+          {[
+            { icon: Clock, text: '~28 min' },
+            { icon: Car, text: '12.4 km' },
+          ].map(({ icon: Icon, text }) => (
+            <div key={text} className="flex items-center gap-1.5 text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              <Icon size={13} />
+              {text}
+            </div>
+          ))}
+          <div className="flex items-center gap-1.5 text-xs font-medium" style={{ color: '#10b981' }}>
+            <ShieldCheck size={13} />
             SafeRide Active
           </div>
         </div>
       </div>
 
       {/* Fare breakdown */}
-      <div className="bg-white rounded-2xl border border-[#e4e8f0] p-5">
-        <h2 className="text-sm font-semibold text-[#0a0f1e] mb-3">Fare Estimate</h2>
+      <div style={glass}>
+        <h2 className="text-sm font-semibold mb-3" style={{ color: 'rgba(255,255,255,0.85)' }}>Fare Estimate</h2>
         <div className="space-y-2">
-          <div className="flex justify-between">
-            <span className="text-sm text-[#4b5563]">Base fare</span>
-            <span className="text-sm text-[#0a0f1e]">{formatCurrency(fare.base)}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-sm text-[#4b5563]">Ride fare (12.4 km)</span>
-            <span className="text-sm text-[#0a0f1e]">{formatCurrency(fare.ride)}</span>
-          </div>
-          <div className="flex justify-between pt-2 border-t border-[#f0f2f8]">
-            <span className="text-sm font-semibold text-[#0a0f1e]">Total</span>
-            <span className="text-base font-bold text-[#0a0f1e]">{formatCurrency(fare.total)}</span>
+          {[
+            { label: 'Base fare', value: fare.base },
+            { label: 'Ride fare (12.4 km)', value: fare.ride },
+          ].map(({ label, value }) => (
+            <div key={label} className="flex justify-between">
+              <span className="text-sm" style={{ color: 'rgba(255,255,255,0.45)' }}>{label}</span>
+              <span className="text-sm" style={{ color: 'rgba(255,255,255,0.75)' }}>{formatCurrency(value)}</span>
+            </div>
+          ))}
+          <div className="flex justify-between pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+            <span className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.9)' }}>Total</span>
+            <span className="text-base font-bold" style={{ color: 'rgba(255,255,255,0.95)' }}>
+              {formatCurrency(fare.total)}
+            </span>
           </div>
         </div>
       </div>
 
       {/* Driver preference */}
-      <div className="bg-white rounded-2xl border border-[#e4e8f0] p-5">
-        <h2 className="text-sm font-semibold text-[#0a0f1e] mb-3">Driver Preference</h2>
+      <div style={glass}>
+        <h2 className="text-sm font-semibold mb-3" style={{ color: 'rgba(255,255,255,0.85)' }}>Driver Preference</h2>
         <div className="space-y-2">
-          {driverOptions.map(({ id, label, desc }) => (
-            <button
-              key={id}
-              onClick={() => setDriverPref(id)}
-              className={`flex items-center justify-between w-full px-3.5 py-3 rounded-xl border text-left transition-all duration-150
-                ${driverPref === id ? 'border-[#3b6ef8] bg-[#3b6ef8]/5' : 'border-[#e4e8f0] hover:border-[#3b6ef8]/30'}`}
-            >
-              <div>
-                <p className="text-sm font-medium text-[#0a0f1e]">{label}</p>
-                <p className="text-xs text-[#9ca3af]">{desc}</p>
-              </div>
-              <div className={`w-4 h-4 rounded-full border-2 transition-all duration-150 ${driverPref === id ? 'border-[#3b6ef8] bg-[#3b6ef8]' : 'border-[#e4e8f0]'}`}>
-                {driverPref === id && <div className="w-1.5 h-1.5 bg-white rounded-full m-auto mt-0.5" />}
-              </div>
-            </button>
-          ))}
+          {driverOptions.map(({ id, label, desc }) => {
+            const active = driverPref === id;
+            return (
+              <button
+                key={id}
+                onClick={() => setDriverPref(id)}
+                className="flex items-center justify-between w-full px-3.5 py-3 rounded-xl text-left transition-all duration-150"
+                style={{
+                  background: active ? 'rgba(79,126,255,0.1)' : 'transparent',
+                  border: active ? '1px solid rgba(79,126,255,0.3)' : '1px solid rgba(255,255,255,0.07)',
+                }}
+              >
+                <div>
+                  <p className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.85)' }}>{label}</p>
+                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>{desc}</p>
+                </div>
+                <div
+                  className="w-4 h-4 rounded-full border-2 transition-all duration-150 flex items-center justify-center"
+                  style={{
+                    borderColor: active ? '#4f7eff' : 'rgba(255,255,255,0.2)',
+                    background: active ? '#4f7eff' : 'transparent',
+                  }}
+                >
+                  {active && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
 
       {/* ETA */}
-      <div className="flex items-center gap-2 px-4 py-3 bg-[#f0f2f8] rounded-xl">
-        <Clock size={16} className="text-[#3b6ef8]" />
-        <p className="text-sm text-[#0a0f1e]">
-          Driver will arrive in approximately <span className="font-semibold">5 minutes</span>
+      <div
+        className="flex items-center gap-2 px-4 py-3 rounded-xl"
+        style={{ background: 'rgba(79,126,255,0.08)', border: '1px solid rgba(79,126,255,0.15)' }}
+      >
+        <Clock size={16} style={{ color: '#5b8eff' }} />
+        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
+          Driver will arrive in approximately <span style={{ fontWeight: 600, color: 'rgba(255,255,255,0.9)' }}>5 minutes</span>
         </p>
       </div>
 

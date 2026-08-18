@@ -1,13 +1,18 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  CheckCircle, MapPin, Navigation, Phone, ShieldCheck,
-  AlertTriangle, Users,
+  CheckCircle, MapPin, Navigation, Phone, AlertTriangle,
 } from 'lucide-react';
 import { mockRides, mockUsers } from '../../data/mockData';
 import { useAuth } from '../../context/AuthContext';
 import Button from '../../components/common/Button';
 import MapPlaceholder from '../../components/map/MapPlaceholder';
+
+const glass = {
+  background: 'rgba(255,255,255,0.04)',
+  border: '1px solid rgba(255,255,255,0.08)',
+  borderRadius: 20,
+  padding: 20,
+};
 
 export default function SOSScreen() {
   const navigate = useNavigate();
@@ -18,60 +23,80 @@ export default function SOSScreen() {
   return (
     <div className="max-w-xl mx-auto px-4 sm:px-6 py-6 space-y-5">
       {/* Alert banner */}
-      <div className="bg-red-50 border-2 border-[#ef4444] rounded-2xl p-5 text-center animate-fade-in">
-        <div className="w-14 h-14 rounded-full bg-[#ef4444] flex items-center justify-center mx-auto mb-3">
+      <div
+        className="rounded-2xl p-5 text-center animate-fade-in"
+        style={{
+          background: 'rgba(239,68,68,0.08)',
+          border: '2px solid rgba(239,68,68,0.35)',
+        }}
+      >
+        <div
+          className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3"
+          style={{ background: '#ef4444', boxShadow: '0 0 40px rgba(239,68,68,0.4)' }}
+        >
           <AlertTriangle size={28} className="text-white" />
         </div>
-        <h1 className="text-xl font-bold text-[#0a0f1e] mb-1">SOS Alert Sent</h1>
-        <p className="text-sm text-[#4b5563]">
+        <h1 className="text-xl font-bold mb-1" style={{ color: 'rgba(255,255,255,0.92)' }}>SOS Alert Sent</h1>
+        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
           Emergency assistance has been notified. Stay calm — help is on the way.
         </p>
       </div>
 
       {/* Notified parties */}
-      <div className="bg-white rounded-2xl border border-[#e4e8f0] p-5">
-        <h2 className="text-sm font-semibold text-[#0a0f1e] mb-3">Notified</h2>
+      <div style={glass}>
+        <h2 className="text-sm font-semibold mb-3" style={{ color: 'rgba(255,255,255,0.85)' }}>Notified</h2>
         <div className="space-y-3">
           {customer.emergencyContacts.map(c => (
             <div key={c.id} className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center">
-                <CheckCircle size={15} className="text-[#10b981]" />
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center"
+                style={{ background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.2)' }}
+              >
+                <CheckCircle size={15} style={{ color: '#10b981' }} />
               </div>
               <div>
-                <p className="text-sm font-medium text-[#0a0f1e]">{c.name}</p>
-                <p className="text-xs text-[#9ca3af]">{c.phone}</p>
+                <p className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.85)' }}>{c.name}</p>
+                <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>{c.phone}</p>
               </div>
             </div>
           ))}
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center">
-              <CheckCircle size={15} className="text-[#10b981]" />
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center"
+              style={{ background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.2)' }}
+            >
+              <CheckCircle size={15} style={{ color: '#10b981' }} />
             </div>
             <div>
-              <p className="text-sm font-medium text-[#0a0f1e]">RideSphere Admin</p>
-              <p className="text-xs text-[#9ca3af]">Emergency monitoring team</p>
+              <p className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.85)' }}>RideSphere Admin</p>
+              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Emergency monitoring team</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Current ride info */}
-      <div className="bg-white rounded-2xl border border-[#e4e8f0] p-5">
-        <h2 className="text-sm font-semibold text-[#0a0f1e] mb-3">Current Ride</h2>
+      <div style={glass}>
+        <h2 className="text-sm font-semibold mb-3" style={{ color: 'rgba(255,255,255,0.85)' }}>Current Ride</h2>
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <MapPin size={13} className="text-[#10b981]" />
-            <span className="text-sm text-[#0a0f1e]">{ride.pickup}</span>
+            <MapPin size={13} style={{ color: '#10b981' }} />
+            <span className="text-sm" style={{ color: 'rgba(255,255,255,0.75)' }}>{ride.pickup}</span>
           </div>
           <div className="flex items-center gap-2">
-            <Navigation size={13} className="text-[#3b6ef8]" />
-            <span className="text-sm text-[#0a0f1e]">{ride.destination}</span>
+            <Navigation size={13} style={{ color: '#5b8eff' }} />
+            <span className="text-sm" style={{ color: 'rgba(255,255,255,0.75)' }}>{ride.destination}</span>
           </div>
           <div className="flex items-center gap-2 pt-1">
-            <div className="w-6 h-6 rounded-full bg-[#0a0f1e] flex items-center justify-center">
-              <span className="text-[10px] font-bold text-white">R</span>
+            <div
+              className="w-6 h-6 rounded-full flex items-center justify-center"
+              style={{ background: 'rgba(79,126,255,0.2)' }}
+            >
+              <span className="text-[10px] font-bold" style={{ color: '#5b8eff' }}>R</span>
             </div>
-            <span className="text-sm text-[#0a0f1e]">{ride.driverName} · {ride.vehicleNumber}</span>
+            <span className="text-sm" style={{ color: 'rgba(255,255,255,0.65)' }}>
+              {ride.driverName} · {ride.vehicleNumber}
+            </span>
           </div>
         </div>
       </div>
@@ -80,9 +105,14 @@ export default function SOSScreen() {
       <MapPlaceholder pickup={ride.pickup} destination={ride.destination} className="h-48" />
 
       {/* Current location */}
-      <div className="flex items-center gap-2 bg-[#f0f2f8] rounded-xl px-4 py-3">
-        <MapPin size={16} className="text-[#3b6ef8]" />
-        <p className="text-sm text-[#0a0f1e]">MC Road, Near Thiruvanchoor, Kottayam</p>
+      <div
+        className="flex items-center gap-2 rounded-xl px-4 py-3"
+        style={{ background: 'rgba(79,126,255,0.08)', border: '1px solid rgba(79,126,255,0.15)' }}
+      >
+        <MapPin size={16} style={{ color: '#5b8eff' }} />
+        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
+          MC Road, Near Thiruvanchoor, Kottayam
+        </p>
       </div>
 
       {/* Actions */}

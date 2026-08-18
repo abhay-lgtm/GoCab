@@ -37,7 +37,15 @@ export default function MobileNavigation() {
   const links = linksByRole[user?.role] || customerLinks;
 
   return (
-    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-[#e4e8f0] safe-area-bottom">
+    <nav
+      className="md:hidden fixed bottom-0 inset-x-0 z-40 safe-area-bottom"
+      style={{
+        background: 'rgba(5,9,26,0.92)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderTop: '1px solid rgba(255,255,255,0.07)',
+      }}
+    >
       <ul className="flex items-center justify-around h-16 px-2">
         {links.map(({ to, label, icon: Icon }) => (
           <li key={to} className="flex-1">
@@ -46,7 +54,7 @@ export default function MobileNavigation() {
               className={({ isActive }) =>
                 clsx(
                   'flex flex-col items-center justify-center gap-0.5 py-1 rounded-xl transition-all duration-150 w-full',
-                  isActive ? 'text-[#3b6ef8]' : 'text-[#9ca3af] hover:text-[#4b5563]'
+                  isActive ? 'text-[#5b8eff]' : 'text-white/35 hover:text-white/60'
                 )
               }
             >
@@ -55,7 +63,7 @@ export default function MobileNavigation() {
                   <span
                     className={clsx(
                       'w-10 h-7 flex items-center justify-center rounded-xl transition-all duration-150',
-                      isActive && 'bg-[#3b6ef8]/10'
+                      isActive && 'bg-[#4f7eff]/15'
                     )}
                   >
                     <Icon size={20} />

@@ -3,44 +3,55 @@ import { CheckCircle, AlertCircle, Info, AlertTriangle, X } from 'lucide-react';
 const config = {
   success: {
     icon: CheckCircle,
-    bg: 'bg-emerald-50 border-emerald-200',
-    icon_color: 'text-[#10b981]',
-    text: 'text-emerald-800',
+    bg: 'rgba(16,185,129,0.12)',
+    border: 'rgba(16,185,129,0.25)',
+    icon_color: '#10b981',
+    text: '#6ee7b7',
   },
   error: {
     icon: AlertCircle,
-    bg: 'bg-red-50 border-red-200',
-    icon_color: 'text-[#ef4444]',
-    text: 'text-red-800',
+    bg: 'rgba(239,68,68,0.12)',
+    border: 'rgba(239,68,68,0.25)',
+    icon_color: '#f87171',
+    text: '#fca5a5',
   },
   warning: {
     icon: AlertTriangle,
-    bg: 'bg-amber-50 border-amber-200',
-    icon_color: 'text-amber-500',
-    text: 'text-amber-800',
+    bg: 'rgba(245,158,11,0.12)',
+    border: 'rgba(245,158,11,0.25)',
+    icon_color: '#fbbf24',
+    text: '#fcd34d',
   },
   info: {
     icon: Info,
-    bg: 'bg-blue-50 border-blue-200',
-    icon_color: 'text-[#3b6ef8]',
-    text: 'text-blue-800',
+    bg: 'rgba(79,126,255,0.12)',
+    border: 'rgba(79,126,255,0.25)',
+    icon_color: '#5b8eff',
+    text: '#93b4ff',
   },
 };
 
 function Toast({ id, message, type = 'info', onRemove }) {
-  const { icon: Icon, bg, icon_color, text } = config[type] || config.info;
+  const c = config[type] || config.info;
+  const Icon = c.icon;
 
   return (
     <div
-      className={`flex items-start gap-3 px-4 py-3 rounded-xl border shadow-lg animate-toast-in ${bg} max-w-sm w-full`}
+      className="flex items-start gap-3 px-4 py-3 rounded-xl shadow-xl animate-toast-in max-w-sm w-full"
+      style={{
+        background: 'rgba(10,15,30,0.96)',
+        border: `1px solid ${c.border}`,
+        backdropFilter: 'blur(16px)',
+      }}
       role="alert"
     >
-      <Icon size={18} className={`mt-0.5 shrink-0 ${icon_color}`} />
-      <p className={`text-sm font-medium flex-1 ${text}`}>{message}</p>
+      <Icon size={18} className="mt-0.5 shrink-0" style={{ color: c.icon_color }} />
+      <p className="text-sm font-medium flex-1" style={{ color: c.text }}>{message}</p>
       <button
         onClick={() => onRemove(id)}
-        className="text-current opacity-50 hover:opacity-100 transition-opacity mt-0.5"
+        className="opacity-40 hover:opacity-80 transition-opacity mt-0.5"
         aria-label="Dismiss"
+        style={{ color: 'rgba(255,255,255,0.6)' }}
       >
         <X size={14} />
       </button>
