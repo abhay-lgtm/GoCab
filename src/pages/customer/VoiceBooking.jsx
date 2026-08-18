@@ -39,7 +39,7 @@ export default function VoiceBooking() {
   };
 
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full max-w-xl mx-auto mt-6 space-y-8">
       <div className="text-center mb-10">
         <div
           className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-4"

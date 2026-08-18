@@ -5,8 +5,8 @@ import Button from '../../components/common/Button';
 
 const rideTypes = [
   { id: 'standard', label: 'Standard', icon: Car, desc: 'Sedan or Hatchback', eta: '5 min', fare: '₹115 – ₹20/km' },
-  { id: 'premium',  label: 'Premium',  icon: Zap, desc: 'SUV or Premium Sedan', eta: '8 min', fare: '₹122 – ₹28/km' },
-  { id: 'pool',     label: 'Pool',     icon: Users, desc: 'Share & save', eta: '12 min', fare: '₹110 – ₹13/km' },
+  { id: 'premium', label: 'Premium', icon: Zap, desc: 'SUV or Premium Sedan', eta: '8 min', fare: '₹122 – ₹28/km' },
+  { id: 'pool', label: 'Pool', icon: Users, desc: 'Share & save', eta: '12 min', fare: '₹110 – ₹13/km' },
 ];
 
 const glass = {
@@ -44,7 +44,7 @@ export default function BookRide() {
   };
 
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full max-w-xl mx-auto mt-12 space-y-8">
       <div>
         <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
           Book a Ride

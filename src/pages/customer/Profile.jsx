@@ -28,7 +28,7 @@ export default function CustomerProfile() {
   };
 
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full max-w-xl mx-auto mt-6 space-y-8">
       <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
         Profile
       </h1>

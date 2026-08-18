@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+ï»¿import { Link, useNavigate } from "react-router-dom";
 import {
   ShieldCheck, Mic, MapPin, Star, ChevronRight,
   CheckCircle, Zap, Clock, Navigation, ArrowRight, Sparkles,
@@ -51,7 +51,7 @@ const pBtn={background:"linear-gradient(135deg,#4f7eff 0%,#3b5ce4 100%)",border:
 const features=[
   {icon:Zap,title:"Instant Booking",desc:"Book a reliable cab in under 30 seconds. No waiting, no hassle.",accent:"#4f7eff",glow:"rgba(79,126,255,0.15)"},
   {icon:ShieldCheck,title:"SafeRide Mode",desc:"Verified drivers, live trip sharing, and one-tap SOS.",accent:"#10b981",glow:"rgba(16,185,129,0.15)"},
-  {icon:Mic,title:"Voice Booking",desc:"Just speak your destination — our AI handles the rest.",accent:"#a78bfa",glow:"rgba(167,139,250,0.15)"},
+  {icon:Mic,title:"Voice Booking",desc:"Just speak your destination â€” our AI handles the rest.",accent:"#a78bfa",glow:"rgba(167,139,250,0.15)"},
   {icon:Clock,title:"Real-Time Tracking",desc:"Track your ride live and share your trip with loved ones.",accent:"#f59e0b",glow:"rgba(245,158,11,0.15)"},
 ];
 
@@ -78,7 +78,7 @@ export default function Landing() {
         <div style={{maxWidth:1280,margin:"0 auto",width:"100%",position:"relative"}}>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"4rem",alignItems:"center"}}>
 
-            {/* Left – Copy */}
+            {/* Left â€“ Copy */}
             <div>
               <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(79,126,255,0.12)",border:"1px solid rgba(79,126,255,0.25)",borderRadius:100,padding:"6px 16px",marginBottom:28}}>
                 <Sparkles size={13} color="#5b8eff"/>
@@ -125,7 +125,7 @@ export default function Landing() {
               </div>
             </div>
 
-            {/* Right – App Card */}
+            {/* Right â€“ App Card */}
             <div style={{display:"flex",justifyContent:"center"}}>
               <div style={{width:"100%",maxWidth:420,background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:28,padding:24,backdropFilter:"blur(12px)",boxShadow:"0 40px 80px rgba(0,0,0,0.5),0 0 60px rgba(79,126,255,0.08)"}}>
                 {/* Map */}

@@ -21,7 +21,7 @@ export default function SOSScreen() {
   const ride = mockRides.find(r => r.id === 'r5') || mockRides[0];
 
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full max-w-xl mx-auto mt-6 space-y-8">
       {/* Alert banner */}
       <div
         className="rounded-2xl p-5 text-center animate-fade-in"
