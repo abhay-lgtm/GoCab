@@ -18,14 +18,14 @@ export default function AdminSOSAlerts() {
   const resolved = alerts.filter(a => a.status === 'resolved');
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-5">
+    <div className="flex flex-col max-w-3xl mx-auto px-4 sm:px-6 py-6 gap-5">
       <div>
         <h1 className="text-2xl font-bold text-[#0a0f1e]">SOS Alerts</h1>
         <p className="text-sm text-[#9ca3af]">{active.length} active · {resolved.length} resolved</p>
       </div>
 
       {active.length > 0 && (
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
           <h2 className="text-sm font-semibold text-red-700 flex items-center gap-2">
             <AlertTriangle size={14} />
             Active Emergencies
@@ -42,7 +42,7 @@ export default function AdminSOSAlerts() {
       )}
 
       {resolved.length > 0 && (
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
           <h2 className="text-sm font-semibold text-[#9ca3af]">Resolved</h2>
           {resolved.map(alert => (
             <SOSAlertCard

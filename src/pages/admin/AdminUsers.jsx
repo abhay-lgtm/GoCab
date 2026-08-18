@@ -12,7 +12,7 @@ export default function AdminUsers() {
   );
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-5">
+    <div className="flex flex-col max-w-5xl mx-auto px-4 sm:px-6 py-6 gap-5">
       <div className="flex items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-[#0a0f1e]">Users</h1>

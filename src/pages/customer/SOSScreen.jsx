@@ -21,7 +21,7 @@ export default function SOSScreen() {
   const ride = mockRides.find(r => r.id === 'r5') || mockRides[0];
 
   return (
-    <div className="w-full max-w-xl mx-auto mt-6 space-y-8">
+    <div className="flex flex-col w-full max-w-xl mx-auto mt-6 gap-8">
       {/* Alert banner */}
       <div
         className="rounded-2xl p-5 text-center animate-fade-in"
@@ -45,7 +45,7 @@ export default function SOSScreen() {
       {/* Notified parties */}
       <div style={glass}>
         <h2 className="text-sm font-semibold mb-3" style={{ color: 'rgba(255,255,255,0.85)' }}>Notified</h2>
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
           {customer.emergencyContacts.map(c => (
             <div key={c.id} className="flex items-center gap-3">
               <div
@@ -78,7 +78,7 @@ export default function SOSScreen() {
       {/* Current ride info */}
       <div style={glass}>
         <h2 className="text-sm font-semibold mb-3" style={{ color: 'rgba(255,255,255,0.85)' }}>Current Ride</h2>
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <MapPin size={13} style={{ color: '#10b981' }} />
             <span className="text-sm" style={{ color: 'rgba(255,255,255,0.75)' }}>{ride.pickup}</span>

@@ -19,7 +19,7 @@ export default function DriverManagement() {
   );
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-5">
+    <div className="flex flex-col max-w-5xl mx-auto px-4 sm:px-6 py-6 gap-5">
       <div>
         <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
           Driver Management

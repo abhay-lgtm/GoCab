@@ -11,7 +11,7 @@ const typeColors = {
 
 export default function SystemActivity() {
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-5">
+    <div className="flex flex-col max-w-3xl mx-auto px-4 sm:px-6 py-6 gap-5">
       <div className="flex items-center gap-3">
         <div
           className="w-10 h-10 rounded-2xl flex items-center justify-center"

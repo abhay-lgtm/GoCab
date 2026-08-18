@@ -17,7 +17,7 @@ export default function RideHistory() {
     : allRides.filter(r => r.status === filter.toLowerCase().replace(' ', '_'));
 
   return (
-    <div className="w-full max-w-xl mx-auto mt-6 space-y-8">
+    <div className="flex flex-col w-full max-w-xl mx-auto mt-6 gap-8">
       <div>
         <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
           Ride History
@@ -54,7 +54,7 @@ export default function RideHistory() {
           message="You don't have any rides matching this filter yet."
         />
       ) : (
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
           {filtered.map(ride => (
             <RideCard key={ride.id} ride={ride} />
           ))}

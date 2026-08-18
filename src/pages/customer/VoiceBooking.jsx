@@ -39,7 +39,7 @@ export default function VoiceBooking() {
   };
 
   return (
-    <div className="w-full max-w-xl mx-auto mt-6 space-y-8">
+    <div className="flex flex-col w-full max-w-xl mx-auto mt-6 gap-8">
       <div className="text-center mb-10">
         <div
           className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-4"
@@ -131,7 +131,7 @@ export default function VoiceBooking() {
 
       {/* State: recognized */}
       {state === 'recognized' && (
-        <div className="space-y-4 animate-slide-up">
+        <div className="flex flex-col gap-4 animate-slide-up">
           <div
             className="rounded-2xl p-4 flex items-center gap-3 mb-2"
             style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)' }}
@@ -142,7 +142,7 @@ export default function VoiceBooking() {
 
           {!editing ? (
             <div
-              className="rounded-2xl p-5 space-y-4"
+              className="flex flex-col rounded-2xl p-5 gap-4"
               style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
             >
               <div>
@@ -156,7 +156,7 @@ export default function VoiceBooking() {
             </div>
           ) : (
             <div
-              className="rounded-2xl p-5 space-y-3"
+              className="flex flex-col rounded-2xl p-5 gap-3"
               style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
             >
               <div>

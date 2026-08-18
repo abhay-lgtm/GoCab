@@ -41,7 +41,7 @@ export default function SafeRide() {
   };
 
   return (
-    <div className="w-full max-w-xl mx-auto mt-6 space-y-8">
+    <div className="flex flex-col w-full max-w-xl mx-auto mt-6 gap-8">
       {/* Header */}
       <div className="flex items-center gap-3 mb-2">
         <div
@@ -68,7 +68,7 @@ export default function SafeRide() {
           <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>{contacts.length} contacts</span>
         </div>
         {contacts.length > 0 ? (
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             {contacts.map(contact => (
               <EmergencyContactCard key={contact.id} contact={contact} onRemove={handleRemove} />
             ))}
@@ -120,7 +120,7 @@ export default function SafeRide() {
 
       {/* Add Contact Modal */}
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Add Emergency Contact">
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           <Input
             label="Name"
             id="contact-name"

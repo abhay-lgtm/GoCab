@@ -6,7 +6,7 @@ import { History } from 'lucide-react';
 export default function DriverRideHistory() {
   const rides = mockRides.filter(r => r.driverId === 'd1').slice(0, 10);
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-4">
+    <div className="flex flex-col max-w-2xl mx-auto px-4 sm:px-6 py-6 gap-4">
       <div>
         <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
           Ride History
@@ -18,7 +18,7 @@ export default function DriverRideHistory() {
       {rides.length === 0 ? (
         <EmptyState icon={History} title="No rides yet" message="Completed rides will appear here." />
       ) : (
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
           {rides.map(r => <RideCard key={r.id} ride={r} />)}
         </div>
       )}

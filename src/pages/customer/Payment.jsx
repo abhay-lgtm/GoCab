@@ -72,7 +72,7 @@ export default function Payment() {
   }
 
   return (
-    <div className="w-full max-w-xl mx-auto mt-6 space-y-8">
+    <div className="flex flex-col w-full max-w-xl mx-auto mt-6 gap-8">
       <div>
         <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
           Ride Completed
@@ -83,7 +83,7 @@ export default function Payment() {
       {/* Fare summary */}
       <div style={glass}>
         <h2 className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.85)' }}>Trip Summary</h2>
-        <div className="space-y-2 text-sm mb-4">
+        <div className="flex flex-col gap-2 text-sm mb-4">
           {[
             { label: 'From', value: ride.pickup },
             { label: 'To', value: ride.destination },
@@ -97,7 +97,7 @@ export default function Payment() {
             </div>
           ))}
         </div>
-        <div className="space-y-2" style={{ borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: 12 }}>
+        <div className="flex flex-col gap-2" style={{ borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: 12 }}>
           {[
             { label: 'Base fare', value: ride.baseFare },
             { label: 'Ride fare', value: ride.rideFare },
@@ -120,7 +120,7 @@ export default function Payment() {
       {/* Payment method */}
       <div style={glass}>
         <h2 className="text-sm font-semibold mb-3" style={{ color: 'rgba(255,255,255,0.85)' }}>Payment Method</h2>
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           {methods.map(({ id, label, icon: Icon, desc }) => {
             const active = method === id;
             return (

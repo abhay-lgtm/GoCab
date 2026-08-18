@@ -52,7 +52,7 @@ export default function AdminDashboard() {
   const recentRides = mockRides.slice(0, 5);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+    <div className="flex flex-col max-w-5xl mx-auto px-4 sm:px-6 py-6 gap-6">
       <div>
         <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
           Operations Dashboard
@@ -107,7 +107,7 @@ export default function AdminDashboard() {
         {/* Platform health */}
         <div style={{ ...glass, padding: 20 }}>
           <h2 className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.85)' }}>Platform Health</h2>
-          <div className="space-y-3">
+          <div className="flex flex-col gap-3">
             {[
               { label: 'Total Rides (All time)', value: mockAdminStats.totalRides.toLocaleString() },
               { label: 'Avg. Driver Rating', value: `${mockAdminStats.avgRating} ★` },
@@ -205,7 +205,7 @@ export default function AdminDashboard() {
             View all
           </button>
         </div>
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
           {mockSystemActivity.slice(0, 5).map(act => (
             <div key={act.id} className="flex items-start gap-3">
               <div

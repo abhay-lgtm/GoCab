@@ -46,7 +46,7 @@ export default function DriverCurrentRide() {
           {formatCurrency(ride?.total || 320)}
         </p>
         <div
-          className="rounded-2xl p-4 text-left space-y-2 mb-6"
+          className="flex flex-col rounded-2xl p-4 text-left gap-2 mb-6"
           style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
         >
           {[
@@ -71,7 +71,7 @@ export default function DriverCurrentRide() {
     <div className="flex flex-col h-full">
       <MapPlaceholder pickup={ride?.pickup} destination={ride?.destination} className="h-56 sm:h-72 rounded-none" />
 
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-5 space-y-4" style={{ background: '#05091a' }}>
+      <div className="flex flex-col flex-1 overflow-y-auto px-4 sm:px-6 py-5 gap-4" style={{ background: '#05091a' }}>
         {/* Status */}
         <div className="flex items-center gap-2">
           <span
@@ -85,7 +85,7 @@ export default function DriverCurrentRide() {
 
         {/* Passenger card */}
         <div
-          className="rounded-2xl p-4 space-y-3"
+          className="flex flex-col rounded-2xl p-4 gap-3"
           style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
         >
           {ride?.safeRideEnabled && (
@@ -116,7 +116,7 @@ export default function DriverCurrentRide() {
             </a>
           </div>
 
-          <div className="space-y-2 pt-1">
+          <div className="flex flex-col gap-2 pt-1">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-[#10b981]" />
               <p className="text-sm" style={{ color: 'rgba(255,255,255,0.75)' }}>{ride?.pickup}</p>

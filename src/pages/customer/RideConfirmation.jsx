@@ -41,7 +41,7 @@ export default function RideConfirmation() {
   };
 
   return (
-    <div className="w-full max-w-xl mx-auto mt-6 space-y-8">
+    <div className="flex flex-col w-full max-w-xl mx-auto mt-6 gap-8">
       <div>
         <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
           Confirm Your Ride
@@ -51,7 +51,7 @@ export default function RideConfirmation() {
 
       {/* Route summary */}
       <div style={glass}>
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
           <div className="flex items-center gap-3">
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
@@ -102,7 +102,7 @@ export default function RideConfirmation() {
       {/* Fare breakdown */}
       <div style={glass}>
         <h2 className="text-sm font-semibold mb-3" style={{ color: 'rgba(255,255,255,0.85)' }}>Fare Estimate</h2>
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           {[
             { label: 'Base fare', value: fare.base },
             { label: 'Ride fare (12.4 km)', value: fare.ride },
@@ -124,7 +124,7 @@ export default function RideConfirmation() {
       {/* Driver preference */}
       <div style={glass}>
         <h2 className="text-sm font-semibold mb-3" style={{ color: 'rgba(255,255,255,0.85)' }}>Driver Preference</h2>
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           {driverOptions.map(({ id, label, desc }) => {
             const active = driverPref === id;
             return (

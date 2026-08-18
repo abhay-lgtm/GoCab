@@ -41,7 +41,7 @@ export default function TrackRide() {
 
       {/* Bottom card */}
       <div
-        className="flex-1 overflow-y-auto px-4 sm:px-6 py-5 space-y-4"
+        className="flex flex-col flex-1 overflow-y-auto px-4 sm:px-6 py-5 gap-4"
         style={{ background: '#05091a' }}
       >
         {/* SafeRide badge */}
@@ -94,7 +94,7 @@ export default function TrackRide() {
           </div>
 
           {/* Route */}
-          <div className="space-y-2 mb-4">
+          <div className="flex flex-col gap-2 mb-4">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-[#10b981] shrink-0" />
               <p className="text-sm" style={{ color: 'rgba(255,255,255,0.75)' }}>{ride.pickup}</p>

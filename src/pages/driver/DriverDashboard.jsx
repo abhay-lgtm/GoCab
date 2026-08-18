@@ -25,7 +25,7 @@ export default function DriverDashboard() {
   const handleReject = (reqId) => setRequests(r => r.filter(req => req.id !== reqId));
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-5">
+    <div className="flex flex-col max-w-2xl mx-auto px-4 sm:px-6 py-6 gap-5">
       {/* Greeting + availability */}
       <div className="flex items-start justify-between gap-4">
         <div>
@@ -95,7 +95,7 @@ export default function DriverDashboard() {
             <p className="text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>No pending requests right now.</p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="flex flex-col gap-3">
             {requests.map(req => (
               <RideRequestCard key={req.id} request={req} onAccept={handleAccept} onReject={handleReject} />
             ))}

@@ -13,7 +13,7 @@ export default function AdminDrivers() {
   );
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-5">
+    <div className="flex flex-col max-w-5xl mx-auto px-4 sm:px-6 py-6 gap-5">
       <div>
         <h1 className="text-2xl font-bold text-[#0a0f1e]">Drivers</h1>
         <p className="text-sm text-[#9ca3af]">{mockDrivers.length} registered drivers</p>
@@ -45,7 +45,7 @@ export default function AdminDrivers() {
               </div>
               <StatusBadge status={driver.available ? 'available' : 'unavailable'} />
             </div>
-            <div className="space-y-1.5 text-xs text-[#4b5563]">
+            <div className="flex flex-col gap-1.5 text-xs text-[#4b5563]">
               <div className="flex justify-between">
                 <span>Vehicle</span>
                 <span className="font-medium text-[#0a0f1e]">{driver.vehicleNumber}</span>

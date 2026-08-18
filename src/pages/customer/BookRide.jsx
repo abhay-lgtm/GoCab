@@ -29,22 +29,10 @@ export default function BookRide() {
     navigate('/customer/confirm', { state: { pickup, destination, rideType } });
   };
 
-  const inputStyle = {
-    background: 'rgba(255,255,255,0.06)',
-    border: '1px solid rgba(255,255,255,0.09)',
-    color: 'rgba(255,255,255,0.85)',
-    outline: 'none',
-    width: '100%',
-    height: 48,
-    borderRadius: 12,
-    fontSize: 14,
-    paddingLeft: 32,
-    paddingRight: 16,
-    transition: 'border-color 0.15s',
-  };
+
 
   return (
-    <div className="w-full max-w-xl mx-auto mt-12 space-y-8">
+    <div className="w-full max-w-xl mx-auto mt-20 flex flex-col gap-8 pb-8">
       <div>
         <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
           Book a Ride
@@ -53,40 +41,54 @@ export default function BookRide() {
       </div>
 
       {/* Route inputs */}
-      <div style={{ ...glass, padding: 20, display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <div className="relative">
-          <div className="absolute left-3 top-1/2 -translate-y-1/2">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#10b981] border-2 border-white/10 shadow" />
+      <div style={{ ...glass, padding: 24 }} className="relative flex flex-col gap-3">
+        {/* Connection Line */}
+        <div className="absolute left-[39px] top-[48px] bottom-[48px] border-l-2 border-dashed z-0" style={{ borderColor: 'rgba(255,255,255,0.15)' }} />
+        
+        <div className="relative z-10">
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 flex justify-center">
+            <div className="w-2.5 h-2.5 rounded-full bg-[#10b981] shadow" />
           </div>
           <input
             type="text"
             placeholder="Pickup location"
             value={pickup}
             onChange={e => setPickup(e.target.value)}
-            style={inputStyle}
+            className="w-full h-12 pl-10 pr-4 rounded-xl text-sm transition-all"
+            style={{
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(255,255,255,0.09)',
+              color: 'rgba(255,255,255,0.85)',
+              outline: 'none',
+            }}
           />
         </div>
-        <div className="ml-3.5 h-4 border-l-2 border-dashed" style={{ borderColor: 'rgba(255,255,255,0.1)' }} />
-        <div className="relative">
-          <div className="absolute left-3 top-1/2 -translate-y-1/2">
-            <Navigation size={13} style={{ color: '#5b8eff' }} />
+        <div className="relative z-10">
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 flex justify-center">
+            <Navigation size={14} style={{ color: '#5b8eff' }} />
           </div>
           <input
             type="text"
             placeholder="Where to?"
             value={destination}
             onChange={e => setDestination(e.target.value)}
-            style={inputStyle}
+            className="w-full h-12 pl-10 pr-4 rounded-xl text-sm transition-all"
+            style={{
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(255,255,255,0.09)',
+              color: 'rgba(255,255,255,0.85)',
+              outline: 'none',
+            }}
           />
         </div>
       </div>
 
       {/* Quick suggestions */}
       <div>
-        <p className="text-xs font-medium uppercase tracking-wide mb-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
+        <p className="text-xs font-medium uppercase tracking-wide mb-3" style={{ color: 'rgba(255,255,255,0.3)' }}>
           Suggestions
         </p>
-        <div className="space-y-1.5">
+        <div className="flex flex-col gap-2">
           {[
             { label: 'IIIT Kottayam', sub: 'Pala Road, Kottayam' },
             { label: 'Kottayam Railway Station', sub: 'Baker Junction, Kottayam' },
@@ -95,7 +97,7 @@ export default function BookRide() {
             <button
               key={s.label}
               onClick={() => setDestination(s.label)}
-              className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-left transition-all"
+              className="flex items-center gap-4 w-full px-4 py-3.5 rounded-xl text-left transition-all"
               style={{
                 background: 'rgba(255,255,255,0.04)',
                 border: '1px solid rgba(255,255,255,0.07)',
@@ -110,13 +112,13 @@ export default function BookRide() {
               }}
             >
               <div
-                className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
                 style={{ background: 'rgba(255,255,255,0.06)' }}
               >
-                <MapPin size={14} style={{ color: 'rgba(255,255,255,0.3)' }} />
+                <MapPin size={16} style={{ color: 'rgba(255,255,255,0.3)' }} />
               </div>
               <div>
-                <p className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.85)' }}>{s.label}</p>
+                <p className="text-sm font-semibold mb-0.5" style={{ color: 'rgba(255,255,255,0.85)' }}>{s.label}</p>
                 <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>{s.sub}</p>
               </div>
             </button>
@@ -130,7 +132,7 @@ export default function BookRide() {
           <p className="text-xs font-medium uppercase tracking-wide mb-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
             Ride Type
           </p>
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             {rideTypes.map(({ id, label, icon: Icon, desc, eta, fare }) => {
               const active = rideType === id;
               return (

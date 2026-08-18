@@ -38,20 +38,20 @@ export default function CustomerDashboard() {
   };
 
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full flex flex-col gap-8 pb-8">
       {/* Greeting */}
       <div>
-        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>{getGreeting()},</p>
-        <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
+        <p className="text-sm mb-1" style={{ color: 'rgba(255,255,255,0.4)' }}>{getGreeting()},</p>
+        <h1 className="text-3xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
           {customerData.name.split(' ')[0]} 👋
         </h1>
       </div>
 
       {/* Active ride banner */}
       {activeRide && (
-        <Link to={`/customer/ride/${activeRide.id}`} style={{ textDecoration: 'none' }}>
+        <Link to={`/customer/ride/${activeRide.id}`} className="block w-full" style={{ textDecoration: 'none' }}>
           <div
-            className="flex items-center gap-3 px-4 py-3 hover:opacity-90 transition-opacity"
+            className="flex items-center gap-4 px-5 py-4 hover:opacity-90 transition-opacity"
             style={{
               background: 'linear-gradient(135deg, rgba(79,126,255,0.2) 0%, rgba(79,126,255,0.08) 100%)',
               border: '1px solid rgba(79,126,255,0.25)',
@@ -59,42 +59,45 @@ export default function CustomerDashboard() {
             }}
           >
             <div
-              className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+              className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
               style={{ background: '#4f7eff' }}
             >
-              <Car size={16} className="text-white" />
+              <Car size={18} className="text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>Active Ride</p>
+              <p className="text-xs mb-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>Active Ride</p>
               <p className="text-sm font-medium truncate" style={{ color: 'rgba(255,255,255,0.85)' }}>
                 {activeRide.pickup} → {activeRide.destination}
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-medium" style={{ color: '#5b8eff' }}>{activeRide.eta}</span>
-              <ChevronRight size={16} style={{ color: 'rgba(255,255,255,0.3)' }} />
+              <span className="text-sm font-semibold" style={{ color: '#5b8eff' }}>{activeRide.eta}</span>
+              <ChevronRight size={18} style={{ color: 'rgba(255,255,255,0.3)' }} />
             </div>
           </div>
         </Link>
       )}
 
       {/* Booking card */}
-      <div style={{ ...glass, padding: 20 }}>
-        <h2 className="text-base font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.9)' }}>
+      <div style={{ ...glass, padding: 24 }}>
+        <h2 className="text-lg font-semibold mb-5" style={{ color: 'rgba(255,255,255,0.95)' }}>
           Where are you going?
         </h2>
-        <div className="space-y-3 mb-4">
+        <div className="relative flex flex-col gap-3 mb-6">
+          {/* Connection Line */}
+          <div className="absolute left-[15px] top-[24px] bottom-[24px] border-l-2 border-dashed z-0" style={{ borderColor: 'rgba(255,255,255,0.15)' }} />
+          
           {/* Pickup */}
-          <div className="relative">
-            <div className="absolute left-3 top-1/2 -translate-y-1/2">
-              <div className="w-2 h-2 rounded-full bg-[#10b981]" />
+          <div className="relative z-10">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 flex justify-center">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#10b981] shadow" />
             </div>
             <input
               type="text"
               placeholder="Pickup location"
               value={pickup}
               onChange={e => setPickup(e.target.value)}
-              className="w-full h-11 pl-7 pr-4 rounded-xl text-sm transition-all"
+              className="w-full h-12 pl-10 pr-4 rounded-xl text-sm transition-all"
               style={{
                 background: 'rgba(255,255,255,0.06)',
                 border: '1px solid rgba(255,255,255,0.09)',
@@ -103,19 +106,17 @@ export default function CustomerDashboard() {
               }}
             />
           </div>
-          {/* Divider */}
-          <div className="ml-3 border-l-2 border-dashed h-2" style={{ borderColor: 'rgba(255,255,255,0.1)' }} />
           {/* Destination */}
-          <div className="relative">
-            <div className="absolute left-3 top-1/2 -translate-y-1/2">
-              <div className="w-2 h-2 rounded-full bg-[#4f7eff]" />
+          <div className="relative z-10">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 flex justify-center">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#4f7eff] shadow" />
             </div>
             <input
               type="text"
               placeholder="Where to?"
               value={destination}
               onChange={e => setDestination(e.target.value)}
-              className="w-full h-11 pl-7 pr-4 rounded-xl text-sm transition-all"
+              className="w-full h-12 pl-10 pr-4 rounded-xl text-sm transition-all"
               style={{
                 background: 'rgba(255,255,255,0.06)',
                 border: '1px solid rgba(255,255,255,0.09)',
@@ -125,14 +126,14 @@ export default function CustomerDashboard() {
             />
           </div>
         </div>
-        <div className="flex gap-2">
-          <Button variant="primary" fullWidth size="md" onClick={handleBook}>
-            <Car size={16} />
+        <div className="flex gap-3">
+          <Button variant="primary" fullWidth size="lg" onClick={handleBook}>
+            <Car size={18} />
             Book Ride
           </Button>
           <Link to="/customer/voice-booking" className="shrink-0">
-            <Button variant="secondary" size="md">
-              <Mic size={16} />
+            <Button variant="secondary" size="lg">
+              <Mic size={18} />
               Voice
             </Button>
           </Link>
@@ -141,16 +142,16 @@ export default function CustomerDashboard() {
 
       {/* Saved locations */}
       {customerData.savedLocations?.length > 0 && (
-        <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
+        <div className="flex gap-3 overflow-x-auto pb-2 -mx-2 px-2 scrollbar-hide">
           {customerData.savedLocations.map(loc => (
             <button
               key={loc.id}
               onClick={() => setDestination(loc.address)}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-all duration-150 shrink-0"
+              className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-150 shrink-0"
               style={{
                 background: 'rgba(255,255,255,0.05)',
                 border: '1px solid rgba(255,255,255,0.08)',
-                color: 'rgba(255,255,255,0.65)',
+                color: 'rgba(255,255,255,0.8)',
               }}
               onMouseEnter={e => {
                 e.currentTarget.style.background = 'rgba(79,126,255,0.1)';
@@ -162,21 +163,21 @@ export default function CustomerDashboard() {
               }}
             >
               {loc.label === 'Home'
-                ? <Home size={13} style={{ color: '#5b8eff' }} />
-                : <Briefcase size={13} style={{ color: '#818cf8' }} />
+                ? <Home size={15} style={{ color: '#5b8eff' }} />
+                : <Briefcase size={15} style={{ color: '#818cf8' }} />
               }
               {loc.label}
             </button>
           ))}
           <button
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-all duration-150 shrink-0"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-150 shrink-0"
             style={{
               background: 'rgba(255,255,255,0.03)',
-              border: '1px dashed rgba(255,255,255,0.1)',
-              color: 'rgba(255,255,255,0.3)',
+              border: '1px dashed rgba(255,255,255,0.15)',
+              color: 'rgba(255,255,255,0.4)',
             }}
           >
-            <Plus size={12} />
+            <Plus size={15} />
             Add
           </button>
         </div>
@@ -198,7 +199,7 @@ export default function CustomerDashboard() {
               View all
             </Link>
           </div>
-          <div className="space-y-2.5">
+          <div className="flex flex-col gap-2.5">
             {recentRides.map(ride => (
               <RideCard key={ride.id} ride={ride} linkTo="/customer/history" />
             ))}

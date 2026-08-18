@@ -21,7 +21,7 @@ export default function AdminRides() {
   });
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-5">
+    <div className="flex flex-col max-w-5xl mx-auto px-4 sm:px-6 py-6 gap-5">
       <div>
         <h1 className="text-2xl font-bold text-[#0a0f1e]">All Rides</h1>
         <p className="text-sm text-[#9ca3af]">{mockRides.length} total rides</p>

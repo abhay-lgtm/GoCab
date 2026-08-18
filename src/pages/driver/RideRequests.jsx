@@ -13,7 +13,7 @@ export default function RideRequests() {
   const handleReject = (reqId) => setRequests(r => r.filter(req => req.id !== reqId));
 
   return (
-    <div className="max-w-xl mx-auto px-4 sm:px-6 py-6 space-y-4">
+    <div className="flex flex-col max-w-xl mx-auto px-4 sm:px-6 py-6 gap-4">
       <div>
         <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
           Ride Requests
@@ -29,7 +29,7 @@ export default function RideRequests() {
           message="New ride requests will appear here. Make sure you're online."
         />
       ) : (
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
           {requests.map(req => (
             <RideRequestCard key={req.id} request={req} onAccept={handleAccept} onReject={handleReject} />
           ))}
