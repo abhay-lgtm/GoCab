@@ -41,7 +41,7 @@ export default function SafeRide() {
   };
 
   return (
-    <div className="max-w-xl mx-auto px-4 sm:px-6 py-6 space-y-5">
+    <div className="w-full space-y-6">
       {/* Header */}
       <div className="flex items-center gap-3 mb-2">
         <div

@@ -42,43 +42,37 @@ export default function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-      {/* Customer routes — protected, role: customer */}
-      <Route element={<ProtectedRoute requiredRole="customer" />}>
-        <Route element={<DashboardShell />}>
-          <Route path="/customer/dashboard" element={<CustomerDashboard />} />
-          <Route path="/customer/book" element={<BookRide />} />
-          <Route path="/customer/voice-booking" element={<VoiceBooking />} />
-          <Route path="/customer/saferide" element={<SafeRide />} />
-          <Route path="/customer/confirm" element={<RideConfirmation />} />
-          <Route path="/customer/ride/:rideId" element={<TrackRide />} />
-          <Route path="/customer/sos" element={<SOSScreen />} />
-          <Route path="/customer/payment/:rideId" element={<Payment />} />
-          <Route path="/customer/history" element={<RideHistory />} />
-          <Route path="/customer/profile" element={<CustomerProfile />} />
-        </Route>
+      {/* Customer routes */}
+      <Route element={<DashboardShell />}>
+        <Route path="/customer/dashboard" element={<CustomerDashboard />} />
+        <Route path="/customer/book" element={<BookRide />} />
+        <Route path="/customer/voice-booking" element={<VoiceBooking />} />
+        <Route path="/customer/saferide" element={<SafeRide />} />
+        <Route path="/customer/confirm" element={<RideConfirmation />} />
+        <Route path="/customer/ride/:rideId" element={<TrackRide />} />
+        <Route path="/customer/sos" element={<SOSScreen />} />
+        <Route path="/customer/payment/:rideId" element={<Payment />} />
+        <Route path="/customer/history" element={<RideHistory />} />
+        <Route path="/customer/profile" element={<CustomerProfile />} />
       </Route>
 
-      {/* Driver routes — protected, role: driver */}
-      <Route element={<ProtectedRoute requiredRole="driver" />}>
-        <Route element={<DashboardShell />}>
-          <Route path="/driver/dashboard" element={<DriverDashboard />} />
-          <Route path="/driver/requests" element={<RideRequests />} />
-          <Route path="/driver/ride/:rideId" element={<CurrentRide />} />
-          <Route path="/driver/history" element={<DriverRideHistory />} />
-          <Route path="/driver/profile" element={<DriverProfile />} />
-        </Route>
+      {/* Driver routes */}
+      <Route element={<DashboardShell />}>
+        <Route path="/driver/dashboard" element={<DriverDashboard />} />
+        <Route path="/driver/requests" element={<RideRequests />} />
+        <Route path="/driver/ride/:rideId" element={<CurrentRide />} />
+        <Route path="/driver/history" element={<DriverRideHistory />} />
+        <Route path="/driver/profile" element={<DriverProfile />} />
       </Route>
 
-      {/* Admin routes — protected, role: admin */}
-      <Route element={<ProtectedRoute requiredRole="admin" />}>
-        <Route element={<DashboardShell />}>
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/users" element={<AdminUsers />} />
-          <Route path="/admin/drivers" element={<AdminDrivers />} />
-          <Route path="/admin/rides" element={<AdminRides />} />
-          <Route path="/admin/sos-alerts" element={<AdminSOSAlerts />} />
-          <Route path="/admin/activity" element={<SystemActivity />} />
-        </Route>
+      {/* Admin routes */}
+      <Route element={<DashboardShell />}>
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/users" element={<AdminUsers />} />
+        <Route path="/admin/drivers" element={<AdminDrivers />} />
+        <Route path="/admin/rides" element={<AdminRides />} />
+        <Route path="/admin/sos-alerts" element={<AdminSOSAlerts />} />
+        <Route path="/admin/activity" element={<SystemActivity />} />
       </Route>
 
       {/* Catch-all */}

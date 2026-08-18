@@ -61,7 +61,7 @@ export default function Register() {
       {/* Left panel */}
       <div
         className="hidden lg:flex lg:w-[38%] flex-col justify-between p-12 relative overflow-hidden"
-        style={{ background: '#07091f', borderRight: '1px solid rgba(255,255,255,0.06)' }}
+        style={{ background: '#07091f', borderRight: '2px solid rgba(255,255,255,0.06)' }}
       >
         {/* Decorative glows */}
         <div style={{
@@ -105,10 +105,10 @@ export default function Register() {
 
       {/* Form panel */}
       <div
-        className="flex-1 overflow-y-auto"
+        className="flex-1 overflow-y-auto flex flex-col items-center"
         style={{ background: '#05091a' }}
       >
-        <div className="max-w-lg mx-auto px-6 py-10">
+        <div className="w-full max-w-lg mx-auto px-6 py-10 lg:py-16">
           {/* Mobile logo */}
           <div className="flex justify-center mb-6 lg:hidden">
             <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
@@ -203,7 +203,7 @@ export default function Register() {
             />
 
             {/* Show password toggle */}
-            <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', marginTop: -6 }}>
               <input
                 type="checkbox"
                 checked={showPassword}

@@ -111,12 +111,12 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Right panel */}
+      {/* Form panel */}
       <div
-        className="flex-1 flex items-center justify-center p-6 sm:p-10"
+        className="flex-1 overflow-y-auto flex flex-col justify-center items-center"
         style={{ background: '#05091a' }}
       >
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-lg mx-auto px-6 py-10 lg:py-16">
           {/* Mobile logo */}
           <div className="flex justify-center mb-8 lg:hidden">
             <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>

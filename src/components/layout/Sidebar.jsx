@@ -66,7 +66,7 @@ export default function Sidebar({ collapsed, onToggle }) {
 
       {/* Nav links */}
       <nav className="flex-1 py-4 overflow-y-auto">
-        <ul className="flex flex-col gap-0.5 px-2">
+        <ul className="flex flex-col gap-2 px-2">
           {links.map(({ to, label, icon: Icon }) => (
             <li key={to}>
               <NavLink

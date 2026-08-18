@@ -29,8 +29,6 @@ export default function Input({
           className={clsx(
             'w-full h-11 rounded-xl text-sm transition-all duration-150',
             'focus:outline-none focus:ring-2',
-            Icon ? 'pl-9' : 'pl-3.5',
-            IconRight ? 'pr-9' : 'pr-3.5',
             error && 'ring-1 ring-red-500/60',
             className
           )}
@@ -38,6 +36,8 @@ export default function Input({
             background: 'rgba(255,255,255,0.06)',
             border: error ? '1px solid rgba(239,68,68,0.5)' : '1px solid rgba(255,255,255,0.1)',
             color: 'rgba(255,255,255,0.9)',
+            paddingLeft: Icon ? 40 : 14,
+            paddingRight: IconRight ? 40 : 14,
           }}
           {...props}
         />

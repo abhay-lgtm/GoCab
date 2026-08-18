@@ -17,7 +17,7 @@ export default function RideHistory() {
     : allRides.filter(r => r.status === filter.toLowerCase().replace(' ', '_'));
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-5">
+    <div className="w-full space-y-6">
       <div>
         <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
           Ride History
