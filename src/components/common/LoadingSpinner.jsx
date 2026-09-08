@@ -3,7 +3,7 @@ export default function LoadingSpinner({ size = 'md', className = '' }) {
   return (
     <span
       className={`inline-block ${sizes[size]} border-2 rounded-full animate-spin ${className}`}
-      style={{ borderColor: 'rgba(255,255,255,0.12)', borderTopColor: '#4f7eff' }}
+      style={{ borderColor: '#374151', borderTopColor: '#2563eb' }}
       role="status"
       aria-label="Loading"
     />

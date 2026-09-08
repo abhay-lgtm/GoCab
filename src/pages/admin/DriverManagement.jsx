@@ -1,47 +1,52 @@
 import { useState } from 'react';
 import { Search, Car, Star } from 'lucide-react';
-import { mockDrivers } from '../../data/mockData';
+import { useApi } from '../../hooks/useApi';
 import StatusBadge from '../../components/common/StatusBadge';
 import EmptyState from '../../components/common/EmptyState';
 
 const glass = {
-  background: 'rgba(255,255,255,0.04)',
-  border: '1px solid rgba(255,255,255,0.08)',
-  borderRadius: 20,
+  background: '#111827',
+  border: '1px solid #1f2937',
+  borderRadius: 4,
   overflow: 'hidden',
 };
 
 export default function DriverManagement() {
   const [query, setQuery] = useState('');
-  const drivers = mockDrivers.filter(d =>
+  const { data: allData, loading } = useApi('/api/data');
+  const driversList = allData?.drivers || [];
+
+  const drivers = driversList.filter(d =>
     d.name.toLowerCase().includes(query.toLowerCase()) ||
     d.vehicleModel.toLowerCase().includes(query.toLowerCase())
   );
 
+  if (loading && !allData) return <div style={{color:'#9ca3af',padding:'40px',textAlign:'center'}}>Loading...</div>;
+
   return (
     <div className="flex flex-col max-w-5xl mx-auto px-4 sm:px-6 py-6 gap-5">
       <div>
-        <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
+        <h1 className="text-2xl font-bold" style={{ color: '#f9fafb', letterSpacing: '-0.02em' }}>
           Driver Management
         </h1>
-        <p className="text-sm mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>
-          {mockDrivers.length} registered drivers
+        <p className="text-sm mt-0.5" style={{ color: '#9ca3af' }}>
+          {driversList.length} registered drivers
         </p>
       </div>
 
       {/* Search */}
       <div className="relative">
-        <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: 'rgba(255,255,255,0.3)' }} />
+        <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: '#6b7280' }} />
         <input
           type="search"
           placeholder="Search drivers..."
           value={query}
           onChange={e => setQuery(e.target.value)}
-          className="w-full h-11 pl-10 pr-4 rounded-xl text-sm"
+          className="w-full h-11 pl-10 pr-4 rounded text-sm"
           style={{
-            background: 'rgba(255,255,255,0.06)',
-            border: '1px solid rgba(255,255,255,0.09)',
-            color: 'rgba(255,255,255,0.85)',
+            background: '#111827',
+            border: '1px solid #374151',
+            color: '#f9fafb',
             outline: 'none',
           }}
         />
@@ -53,12 +58,12 @@ export default function DriverManagement() {
         <div style={glass}>
           <table className="w-full text-sm min-w-[600px]">
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
+              <tr style={{ borderBottom: '1px solid #1f2937', background: '#111827' }}>
                 {['Name', 'Vehicle', 'Vehicle No.', 'Rides', 'Rating', 'Status'].map(h => (
                   <th
                     key={h}
                     className="text-left px-5 py-3 text-xs font-medium uppercase tracking-wide"
-                    style={{ color: 'rgba(255,255,255,0.3)' }}
+                    style={{ color: '#6b7280' }}
                   >
                     {h}
                   </th>
@@ -69,30 +74,30 @@ export default function DriverManagement() {
               {drivers.map(d => (
                 <tr
                   key={d.id}
-                  style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', transition: 'background 0.1s' }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.025)'}
+                  style={{ borderBottom: '1px solid #111827', transition: 'background 0.1s' }}
+                  onMouseEnter={e => e.currentTarget.style.background = '#111827'}
                   onMouseLeave={e => e.currentTarget.style.background = ''}
                 >
-                  <td className="px-5 py-3 font-medium" style={{ color: 'rgba(255,255,255,0.85)' }}>
+                  <td className="px-5 py-3 font-medium" style={{ color: '#f9fafb' }}>
                     <div className="flex items-center gap-2.5">
                       <div
                         className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-bold"
-                        style={{ background: 'rgba(16,185,129,0.2)', color: '#10b981' }}
+                        style={{ background: '#111827', color: '#16a34a' }}
                       >
                         {d.name.charAt(0)}
                       </div>
                       {d.name}
                     </div>
                   </td>
-                  <td className="px-5 py-3" style={{ color: 'rgba(255,255,255,0.5)' }}>{d.vehicleModel}</td>
-                  <td className="px-5 py-3 font-mono text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                  <td className="px-5 py-3" style={{ color: '#9ca3af' }}>{d.vehicleModel}</td>
+                  <td className="px-5 py-3 font-mono text-xs" style={{ color: '#9ca3af' }}>
                     {d.vehicleNumber}
                   </td>
                   <td className="px-5 py-3" style={{ color: 'rgba(255,255,255,0.7)' }}>{d.totalRides}</td>
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-1">
                       <Star size={12} fill="#fbbf24" style={{ color: '#fbbf24' }} />
-                      <span style={{ color: 'rgba(255,255,255,0.8)' }}>{d.rating}</span>
+                      <span style={{ color: '#e5e7eb' }}>{d.rating}</span>
                     </div>
                   </td>
                   <td className="px-5 py-3">

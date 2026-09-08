@@ -14,17 +14,17 @@ export function RideSphereLogoMark({ size = 32 }) {
       aria-hidden="true"
     >
       {/* Road */}
-      <rect x="14" y="6" width="4" height="20" rx="2" fill="#3b6ef8" opacity="0.15" />
+      <rect x="14" y="6" width="4" height="20" rx="2" fill="#2563eb" opacity="0.15" />
       {/* Pin body */}
       <path
         d="M16 3C12.134 3 9 6.134 9 10c0 5.25 7 14 7 14s7-8.75 7-14c0-3.866-3.134-7-7-7Z"
-        fill="#3b6ef8"
+        fill="#2563eb"
       />
       {/* Pin hole */}
       <circle cx="16" cy="10" r="2.5" fill="white" />
       {/* Subtle road lines */}
-      <rect x="15.25" y="20" width="1.5" height="3" rx="0.75" fill="#3b6ef8" opacity="0.4" />
-      <rect x="15.25" y="25" width="1.5" height="3" rx="0.75" fill="#3b6ef8" opacity="0.2" />
+      <rect x="15.25" y="20" width="1.5" height="3" rx="0.75" fill="#2563eb" opacity="0.4" />
+      <rect x="15.25" y="25" width="1.5" height="3" rx="0.75" fill="#2563eb" opacity="0.2" />
     </svg>
   );
 }
@@ -39,10 +39,10 @@ export function RideSphereLogo({ dark = false }) {
       <RideSphereLogoMark size={30} />
       <span
         className={`text-lg font-bold tracking-tight ${
-          dark ? 'text-white' : 'text-[#0a0f1e]'
+          dark ? 'text-white' : 'text-[#111827]'
         } group-hover:opacity-80 transition-opacity`}
       >
-        Ride<span className="text-[#3b6ef8]">Sphere</span>
+        Ride<span className="text-[#2563eb]">Sphere</span>
       </span>
     </Link>
   );

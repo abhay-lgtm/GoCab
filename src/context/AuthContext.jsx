@@ -31,36 +31,59 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
-  const login = ({ email, password, role }) => {
-    const cred = MOCK_CREDENTIALS[email.toLowerCase()];
-    if (!cred) return { success: false, error: 'Account not found.' };
-    if (cred.password !== password) return { success: false, error: 'Incorrect password.' };
-    if (role && cred.role !== role) return { success: false, error: `This account is not a ${role} account.` };
+  const login = async ({ email, password, role }) => {
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await response.json();
+      if (!response.ok) return { success: false, error: data.message || 'Login failed' };
+      
+      if (role && data.role !== role) {
+        return { success: false, error: `This account is not a ${role} account.` };
+      }
 
-    const userData = {
-      id: cred.id,
-      email,
-      role: cred.role,
-      name: email === 'rajesh@example.com' ? 'Rajesh Kumar'
-          : email === 'admin@ridesphere.in' ? 'Admin User'
-          : 'Abhay Prasad',
-    };
-    setUser(userData);
-    localStorage.setItem('ridesphere_user', JSON.stringify(userData));
-    return { success: true, role: cred.role, dashboard: ROLE_DASHBOARDS[cred.role] };
+      const userData = {
+        id: data.userId,
+        email,
+        role: data.role,
+        name: data.role === 'admin' ? 'Admin User' : (data.role === 'driver' ? 'Rajesh Kumar' : 'Abhay Prasad'),
+        token: data.token
+      };
+      
+      setUser(userData);
+      localStorage.setItem('ridesphere_user', JSON.stringify(userData));
+      localStorage.setItem('token', data.token);
+      return { success: true, role: data.role, dashboard: ROLE_DASHBOARDS[data.role] };
+    } catch (error) {
+      return { success: false, error: 'Network error. Backend might not be running.' };
+    }
   };
 
-  const register = ({ name, email, phone, password, role }) => {
-    // Mock registration — always succeeds in demo
-    const userData = { id: 'new_' + Date.now(), email, name, role: role || 'customer' };
-    setUser(userData);
-    localStorage.setItem('ridesphere_user', JSON.stringify(userData));
-    return { success: true, role: userData.role, dashboard: ROLE_DASHBOARDS[userData.role] };
+  const register = async ({ name, email, phone, password, role }) => {
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password, role: role || 'customer' })
+      });
+      const data = await response.json();
+      if (!response.ok) return { success: false, error: data.message || 'Registration failed' };
+
+      // After register, you typically want to login automatically, or return success to prompt login.
+      // We'll log them in directly
+      return await login({ email, password, role: role || 'customer' });
+    } catch (error) {
+      return { success: false, error: 'Network error. Backend might not be running.' };
+    }
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('ridesphere_user');
+    localStorage.removeItem('token');
   };
 
   const value = { user, loading, login, logout, register };

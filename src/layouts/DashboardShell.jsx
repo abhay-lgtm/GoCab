@@ -19,25 +19,7 @@ function DashboardShell() {
 
   return (
     <ToastContext.Provider value={addToast}>
-      <div className="flex h-screen overflow-hidden" style={{ background: '#05091a' }}>
-        {/* Subtle background glows */}
-        <div style={{
-          position: 'fixed', top: -300, left: -200, width: 700, height: 700,
-          background: 'radial-gradient(circle, rgba(79,126,255,0.07) 0%, transparent 70%)',
-          borderRadius: '50%', pointerEvents: 'none', zIndex: 0,
-        }} />
-        <div style={{
-          position: 'fixed', bottom: -200, right: -150, width: 600, height: 600,
-          background: 'radial-gradient(circle, rgba(167,139,250,0.05) 0%, transparent 70%)',
-          borderRadius: '50%', pointerEvents: 'none', zIndex: 0,
-        }} />
-        {/* Subtle grid overlay */}
-        <div style={{
-          position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
-          backgroundImage: 'linear-gradient(rgba(79,126,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(79,126,255,0.025) 1px, transparent 1px)',
-          backgroundSize: '60px 60px',
-        }} />
-
+      <div className="flex h-screen overflow-hidden bg-[#0a0d14]">
         <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
         <div className="flex-1 flex flex-col overflow-hidden" style={{ position: 'relative', zIndex: 1 }}>
           {/* Main content */}

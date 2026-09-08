@@ -1,17 +1,22 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { History } from 'lucide-react';
-import { mockRides } from '../../data/mockData';
 import { useAuth } from '../../context/AuthContext';
 import RideCard from '../../components/booking/RideCard';
 import EmptyState from '../../components/common/EmptyState';
+import { useApi } from '../../hooks/useApi';
 
 const filters = ['All', 'Completed', 'Cancelled', 'In Progress'];
 
 export default function RideHistory() {
   const { user } = useAuth();
   const [filter, setFilter] = useState('All');
+  const { data: bookings, loading } = useApi('/api/bookings');
 
-  const allRides = mockRides.filter(r => r.customerId === (user?.id || 'u1'));
+  if (loading) {
+    return <div style={{ color: '#9ca3af', padding: '40px', textAlign: 'center' }}>Loading...</div>;
+  }
+
+  const allRides = bookings || [];
   const filtered = filter === 'All'
     ? allRides
     : allRides.filter(r => r.status === filter.toLowerCase().replace(' ', '_'));
@@ -19,10 +24,10 @@ export default function RideHistory() {
   return (
     <div className="flex flex-col w-full max-w-xl mx-auto mt-6 gap-8">
       <div>
-        <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
+        <h1 className="text-2xl font-bold" style={{ color: '#f9fafb', letterSpacing: '-0.02em' }}>
           Ride History
         </h1>
-        <p className="text-sm mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>{allRides.length} total rides</p>
+        <p className="text-sm mt-0.5" style={{ color: '#9ca3af' }}>{allRides.length} total rides</p>
       </div>
 
       {/* Filter tabs */}
@@ -33,11 +38,11 @@ export default function RideHistory() {
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all duration-150 shrink-0"
+              className="px-3.5 py-1.5 rounded text-xs font-medium whitespace-nowrap transition-all duration-150 shrink-0"
               style={{
-                background: active ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.05)',
-                color: active ? '#05091a' : 'rgba(255,255,255,0.5)',
-                border: active ? 'none' : '1px solid rgba(255,255,255,0.08)',
+                background: active ? '#f9fafb' : '#1f2937',
+                color: active ? '#0a0d14' : '#9ca3af',
+                border: active ? 'none' : '1px solid #1f2937',
               }}
             >
               {f}

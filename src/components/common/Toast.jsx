@@ -5,14 +5,14 @@ const config = {
     icon: CheckCircle,
     bg: 'rgba(16,185,129,0.12)',
     border: 'rgba(16,185,129,0.25)',
-    icon_color: '#10b981',
+    icon_color: '#16a34a',
     text: '#6ee7b7',
   },
   error: {
     icon: AlertCircle,
     bg: 'rgba(239,68,68,0.12)',
     border: 'rgba(239,68,68,0.25)',
-    icon_color: '#f87171',
+    icon_color: '#ef4444',
     text: '#fca5a5',
   },
   warning: {
@@ -26,7 +26,7 @@ const config = {
     icon: Info,
     bg: 'rgba(79,126,255,0.12)',
     border: 'rgba(79,126,255,0.25)',
-    icon_color: '#5b8eff',
+    icon_color: '#2563eb',
     text: '#93b4ff',
   },
 };
@@ -37,11 +37,9 @@ function Toast({ id, message, type = 'info', onRemove }) {
 
   return (
     <div
-      className="flex items-start gap-3 px-4 py-3 rounded-xl shadow-xl animate-toast-in max-w-sm w-full"
+      className="flex items-start gap-3 px-4 py-3 rounded shadow-xl animate-toast-in max-w-sm w-full bg-[#111827]"
       style={{
-        background: 'rgba(10,15,30,0.96)',
-        border: `1px solid ${c.border}`,
-        backdropFilter: 'blur(16px)',
+        border: `1px solid ${c.border}`
       }}
       role="alert"
     >
@@ -51,7 +49,7 @@ function Toast({ id, message, type = 'info', onRemove }) {
         onClick={() => onRemove(id)}
         className="opacity-40 hover:opacity-80 transition-opacity mt-0.5"
         aria-label="Dismiss"
-        style={{ color: 'rgba(255,255,255,0.6)' }}
+        style={{ color: '#d1d5db' }}
       >
         <X size={14} />
       </button>

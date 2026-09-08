@@ -13,9 +13,9 @@ const driverOptions = [
 ];
 
 const glass = {
-  background: 'rgba(255,255,255,0.04)',
-  border: '1px solid rgba(255,255,255,0.08)',
-  borderRadius: 20,
+  background: '#111827',
+  border: '1px solid #1f2937',
+  borderRadius: 4,
   padding: 20,
 };
 
@@ -43,10 +43,10 @@ export default function RideConfirmation() {
   return (
     <div className="flex flex-col w-full max-w-xl mx-auto mt-6 gap-8">
       <div>
-        <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
+        <h1 className="text-2xl font-bold" style={{ color: '#f9fafb', letterSpacing: '-0.02em' }}>
           Confirm Your Ride
         </h1>
-        <p className="text-sm mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>Review details before booking.</p>
+        <p className="text-sm mt-0.5" style={{ color: '#9ca3af' }}>Review details before booking.</p>
       </div>
 
       {/* Route summary */}
@@ -55,44 +55,44 @@ export default function RideConfirmation() {
           <div className="flex items-center gap-3">
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
-              style={{ background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.2)' }}
+              style={{ background: '#111827', border: '1px solid rgba(16,185,129,0.2)' }}
             >
-              <MapPin size={14} style={{ color: '#10b981' }} />
+              <MapPin size={14} style={{ color: '#16a34a' }} />
             </div>
             <div>
-              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Pickup</p>
-              <p className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.9)' }}>{state.pickup}</p>
+              <p className="text-xs" style={{ color: '#9ca3af' }}>Pickup</p>
+              <p className="text-sm font-semibold" style={{ color: '#f9fafb' }}>{state.pickup}</p>
             </div>
           </div>
-          <div className="ml-4 border-l-2 border-dashed h-4" style={{ borderColor: 'rgba(255,255,255,0.1)' }} />
+          <div className="ml-4 border-l-2 border-dashed h-4" style={{ borderColor: '#1f2937' }} />
           <div className="flex items-center gap-3">
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
-              style={{ background: 'rgba(79,126,255,0.15)', border: '1px solid rgba(79,126,255,0.2)' }}
+              style={{ background: '#111827', border: '1px solid rgba(79,126,255,0.2)' }}
             >
-              <Navigation size={14} style={{ color: '#5b8eff' }} />
+              <Navigation size={14} style={{ color: '#2563eb' }} />
             </div>
             <div>
-              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Destination</p>
-              <p className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.9)' }}>{state.destination}</p>
+              <p className="text-xs" style={{ color: '#9ca3af' }}>Destination</p>
+              <p className="text-sm font-semibold" style={{ color: '#f9fafb' }}>{state.destination}</p>
             </div>
           </div>
         </div>
 
         <div
           className="flex gap-4 mt-4 pt-4"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}
+          style={{ borderTop: '1px solid #1f2937' }}
         >
           {[
             { icon: Clock, text: '~28 min' },
             { icon: Car, text: '12.4 km' },
           ].map(({ icon: Icon, text }) => (
-            <div key={text} className="flex items-center gap-1.5 text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            <div key={text} className="flex items-center gap-1.5 text-xs" style={{ color: '#9ca3af' }}>
               <Icon size={13} />
               {text}
             </div>
           ))}
-          <div className="flex items-center gap-1.5 text-xs font-medium" style={{ color: '#10b981' }}>
+          <div className="flex items-center gap-1.5 text-xs font-medium" style={{ color: '#16a34a' }}>
             <ShieldCheck size={13} />
             SafeRide Active
           </div>
@@ -101,20 +101,20 @@ export default function RideConfirmation() {
 
       {/* Fare breakdown */}
       <div style={glass}>
-        <h2 className="text-sm font-semibold mb-3" style={{ color: 'rgba(255,255,255,0.85)' }}>Fare Estimate</h2>
+        <h2 className="text-sm font-semibold mb-3" style={{ color: '#f9fafb' }}>Fare Estimate</h2>
         <div className="flex flex-col gap-2">
           {[
             { label: 'Base fare', value: fare.base },
             { label: 'Ride fare (12.4 km)', value: fare.ride },
           ].map(({ label, value }) => (
             <div key={label} className="flex justify-between">
-              <span className="text-sm" style={{ color: 'rgba(255,255,255,0.45)' }}>{label}</span>
-              <span className="text-sm" style={{ color: 'rgba(255,255,255,0.75)' }}>{formatCurrency(value)}</span>
+              <span className="text-sm" style={{ color: '#9ca3af' }}>{label}</span>
+              <span className="text-sm" style={{ color: '#e5e7eb' }}>{formatCurrency(value)}</span>
             </div>
           ))}
-          <div className="flex justify-between pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
-            <span className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.9)' }}>Total</span>
-            <span className="text-base font-bold" style={{ color: 'rgba(255,255,255,0.95)' }}>
+          <div className="flex justify-between pt-2" style={{ borderTop: '1px solid #1f2937' }}>
+            <span className="text-sm font-semibold" style={{ color: '#f9fafb' }}>Total</span>
+            <span className="text-base font-bold" style={{ color: '#f9fafb' }}>
               {formatCurrency(fare.total)}
             </span>
           </div>
@@ -123,7 +123,7 @@ export default function RideConfirmation() {
 
       {/* Driver preference */}
       <div style={glass}>
-        <h2 className="text-sm font-semibold mb-3" style={{ color: 'rgba(255,255,255,0.85)' }}>Driver Preference</h2>
+        <h2 className="text-sm font-semibold mb-3" style={{ color: '#f9fafb' }}>Driver Preference</h2>
         <div className="flex flex-col gap-2">
           {driverOptions.map(({ id, label, desc }) => {
             const active = driverPref === id;
@@ -131,21 +131,21 @@ export default function RideConfirmation() {
               <button
                 key={id}
                 onClick={() => setDriverPref(id)}
-                className="flex items-center justify-between w-full px-3.5 py-3 rounded-xl text-left transition-all duration-150"
+                className="flex items-center justify-between w-full px-3.5 py-3 rounded text-left transition-all duration-150"
                 style={{
                   background: active ? 'rgba(79,126,255,0.1)' : 'transparent',
-                  border: active ? '1px solid rgba(79,126,255,0.3)' : '1px solid rgba(255,255,255,0.07)',
+                  border: active ? '1px solid rgba(79,126,255,0.3)' : '1px solid #1f2937',
                 }}
               >
                 <div>
-                  <p className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.85)' }}>{label}</p>
-                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>{desc}</p>
+                  <p className="text-sm font-medium" style={{ color: '#f9fafb' }}>{label}</p>
+                  <p className="text-xs" style={{ color: '#9ca3af' }}>{desc}</p>
                 </div>
                 <div
                   className="w-4 h-4 rounded-full border-2 transition-all duration-150 flex items-center justify-center"
                   style={{
-                    borderColor: active ? '#4f7eff' : 'rgba(255,255,255,0.2)',
-                    background: active ? '#4f7eff' : 'transparent',
+                    borderColor: active ? '#2563eb' : '#4b5563',
+                    background: active ? '#2563eb' : 'transparent',
                   }}
                 >
                   {active && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
@@ -158,12 +158,12 @@ export default function RideConfirmation() {
 
       {/* ETA */}
       <div
-        className="flex items-center gap-2 px-4 py-3 rounded-xl"
-        style={{ background: 'rgba(79,126,255,0.08)', border: '1px solid rgba(79,126,255,0.15)' }}
+        className="flex items-center gap-2 px-4 py-3 rounded"
+        style={{ background: '#111827', border: '1px solid rgba(79,126,255,0.15)' }}
       >
-        <Clock size={16} style={{ color: '#5b8eff' }} />
+        <Clock size={16} style={{ color: '#2563eb' }} />
         <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
-          Driver will arrive in approximately <span style={{ fontWeight: 600, color: 'rgba(255,255,255,0.9)' }}>5 minutes</span>
+          Driver will arrive in approximately <span style={{ fontWeight: 600, color: '#f9fafb' }}>5 minutes</span>
         </p>
       </div>
 

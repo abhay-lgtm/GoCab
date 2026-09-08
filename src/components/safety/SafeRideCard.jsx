@@ -11,33 +11,33 @@ const benefits = [
 export default function SafeRideCard({ enabled, onToggle, compact = false }) {
   return (
     <div
-      className="rounded-2xl transition-all duration-200"
+      className="rounded transition-all duration-200"
       style={{
-        background: enabled ? 'rgba(16,185,129,0.08)' : 'rgba(255,255,255,0.04)',
-        border: enabled ? '1px solid rgba(16,185,129,0.25)' : '1px solid rgba(255,255,255,0.08)',
+        background: enabled ? 'rgba(16,185,129,0.08)' : '#111827',
+        border: enabled ? '1px solid rgba(16,185,129,0.25)' : '1px solid #1f2937',
       }}
     >
       <div className="flex items-start justify-between gap-4 p-4">
         <div className="flex items-center gap-3">
           <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-            style={{ background: enabled ? '#10b981' : 'rgba(255,255,255,0.07)' }}
+            className="w-10 h-10 rounded flex items-center justify-center shrink-0"
+            style={{ background: enabled ? '#16a34a' : '#1f2937' }}
           >
-            <ShieldCheck size={20} className={enabled ? 'text-white' : ''} style={enabled ? {} : { color: 'rgba(255,255,255,0.3)' }} />
+            <ShieldCheck size={20} className={enabled ? 'text-white' : ''} style={enabled ? {} : { color: '#6b7280' }} />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <p className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.9)' }}>SafeRide Mode</p>
+              <p className="text-sm font-semibold" style={{ color: '#f9fafb' }}>SafeRide Mode</p>
               {enabled && (
                 <span
                   className="text-xs font-medium px-1.5 py-0.5 rounded-md"
-                  style={{ color: '#10b981', background: 'rgba(16,185,129,0.15)' }}
+                  style={{ color: '#16a34a', background: '#111827' }}
                 >
                   Active
                 </span>
               )}
             </div>
-            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            <p className="text-xs mt-0.5" style={{ color: '#9ca3af' }}>
               Extra protection for your journey
             </p>
           </div>
@@ -48,10 +48,10 @@ export default function SafeRideCard({ enabled, onToggle, compact = false }) {
           onClick={onToggle}
           aria-pressed={enabled}
           aria-label="Toggle SafeRide mode"
-          className="relative w-11 h-6 rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#10b981] focus-visible:ring-offset-2 shrink-0 mt-1"
+          className="relative w-11 h-6 rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16a34a] focus-visible:ring-offset-2 shrink-0 mt-1"
           style={{
-            background: enabled ? '#10b981' : 'rgba(255,255,255,0.12)',
-            focusRingOffset: '#05091a',
+            background: enabled ? '#16a34a' : '#374151',
+            focusRingOffset: '#0a0d14',
           }}
         >
           <span
@@ -71,11 +71,11 @@ export default function SafeRideCard({ enabled, onToggle, compact = false }) {
               <li key={b} className="flex items-center gap-2">
                 <CheckCircle
                   size={14}
-                  style={{ color: enabled ? '#10b981' : 'rgba(255,255,255,0.2)' }}
+                  style={{ color: enabled ? '#16a34a' : '#4b5563' }}
                 />
                 <span
                   className="text-xs"
-                  style={{ color: enabled ? 'rgba(110,231,183,0.9)' : 'rgba(255,255,255,0.3)' }}
+                  style={{ color: enabled ? 'rgba(110,231,183,0.9)' : '#6b7280' }}
                 >
                   {b}
                 </span>

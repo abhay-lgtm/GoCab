@@ -1,35 +1,26 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  MapPin, Navigation, Mic, Car, Clock, ChevronRight,
-  Star, ShieldCheck, Home, Briefcase, Plus,
-} from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { getGreeting } from '../../utils/formatDate';
-import { mockUsers, mockRides, mockActiveRide } from '../../data/mockData';
+import { useApi } from '../../hooks/useApi';
+import { Car, Home, Briefcase, Plus, ChevronRight, Navigation } from 'lucide-react';
 import Button from '../../components/common/Button';
 import SafeRideCard from '../../components/safety/SafeRideCard';
 import RideCard from '../../components/booking/RideCard';
 
-const glass = {
-  background: 'rgba(255,255,255,0.04)',
-  border: '1px solid rgba(255,255,255,0.08)',
-  borderRadius: 20,
-};
-
 export default function CustomerDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const customerData = mockUsers.find(u => u.id === user?.id) || mockUsers[0];
-  const [safeRide, setSafeRide] = useState(customerData.safeRideEnabled);
+  const { data: bookings, loading } = useApi('/api/bookings');
+  
+  const [safeRide, setSafeRide] = useState(true);
   const [pickup, setPickup] = useState('');
   const [destination, setDestination] = useState('');
 
-  const recentRides = mockRides
-    .filter(r => r.customerId === customerData.id && r.status === 'completed')
+  const recentRides = (bookings || [])
+    .filter(b => b.status === 'completed')
     .slice(0, 3);
 
-  const activeRide = mockActiveRide;
+  const activeRide = (bookings || []).find(b => b.status === 'in_progress' || b.status === 'accepted') || null;
 
   const handleBook = () => {
     navigate(!pickup && !destination ? '/customer/book' : '/customer/book', {
@@ -37,92 +28,79 @@ export default function CustomerDashboard() {
     });
   };
 
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 18) return 'Good afternoon';
+    return 'Good evening';
+  };
+
+  if (loading && !bookings) return <div style={{color:'#9ca3af',padding:'40px',textAlign:'center'}}>Loading...</div>;
+
   return (
     <div className="w-full flex flex-col gap-8 pb-8">
       {/* Greeting */}
       <div>
-        <p className="text-sm mb-1" style={{ color: 'rgba(255,255,255,0.4)' }}>{getGreeting()},</p>
-        <h1 className="text-3xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
-          {customerData.name.split(' ')[0]} 👋
+        <p className="text-sm mb-1 text-[#9ca3af]">{getGreeting()},</p>
+        <h1 className="text-3xl font-bold text-[#f9fafb] tracking-tight">
+          {(user?.name || 'There').split(' ')[0]}
         </h1>
       </div>
 
       {/* Active ride banner */}
       {activeRide && (
-        <Link to={`/customer/ride/${activeRide.id}`} className="block w-full" style={{ textDecoration: 'none' }}>
-          <div
-            className="flex items-center gap-4 px-5 py-4 hover:opacity-90 transition-opacity"
-            style={{
-              background: 'linear-gradient(135deg, rgba(79,126,255,0.2) 0%, rgba(79,126,255,0.08) 100%)',
-              border: '1px solid rgba(79,126,255,0.25)',
-              borderRadius: 16,
-            }}
-          >
-            <div
-              className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
-              style={{ background: '#4f7eff' }}
-            >
+        <Link to={`/customer/ride/${activeRide.id}`} className="block w-full">
+          <div className="flex items-center gap-4 px-5 py-4 bg-[#1e3a5f] border border-[#2563eb]/50 rounded hover:opacity-90 transition-opacity">
+            <div className="w-10 h-10 rounded flex items-center justify-center shrink-0 bg-[#2563eb]">
               <Car size={18} className="text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs mb-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>Active Ride</p>
-              <p className="text-sm font-medium truncate" style={{ color: 'rgba(255,255,255,0.85)' }}>
+              <p className="text-xs mb-0.5 text-[#9ca3af]">Active Ride</p>
+              <p className="text-sm font-medium truncate text-[#f9fafb]">
                 {activeRide.pickup} → {activeRide.destination}
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold" style={{ color: '#5b8eff' }}>{activeRide.eta}</span>
-              <ChevronRight size={18} style={{ color: 'rgba(255,255,255,0.3)' }} />
+              <span className="text-sm font-semibold text-white">{activeRide.eta}</span>
+              <ChevronRight size={18} className="text-white/70" />
             </div>
           </div>
         </Link>
       )}
 
       {/* Booking card */}
-      <div style={{ ...glass, padding: 24 }}>
-        <h2 className="text-lg font-semibold mb-5" style={{ color: 'rgba(255,255,255,0.95)' }}>
+      <div className="p-6 bg-[#111827] border border-[#1f2937] rounded">
+        <h2 className="text-lg font-semibold mb-5 text-[#f9fafb]">
           Where are you going?
         </h2>
         <div className="relative flex flex-col gap-3 mb-6">
           {/* Connection Line */}
-          <div className="absolute left-[15px] top-[24px] bottom-[24px] border-l-2 border-dashed z-0" style={{ borderColor: 'rgba(255,255,255,0.15)' }} />
+          <div className="absolute left-[19px] top-[24px] bottom-[24px] border-l-2 border-dashed border-[#374151] z-0" />
           
           {/* Pickup */}
           <div className="relative z-10">
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 flex justify-center">
-              <div className="w-2.5 h-2.5 rounded-full bg-[#10b981] shadow" />
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 w-4 flex justify-center">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#16a34a]" />
             </div>
             <input
               type="text"
               placeholder="Pickup location"
               value={pickup}
               onChange={e => setPickup(e.target.value)}
-              className="w-full h-12 pl-10 pr-4 rounded-xl text-sm transition-all"
-              style={{
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.09)',
-                color: 'rgba(255,255,255,0.85)',
-                outline: 'none',
-              }}
+              className="w-full h-12 pl-[44px] pr-4 rounded text-sm bg-[#0a0d14] text-[#f9fafb] border border-[#1f2937] focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb] transition-all"
             />
           </div>
           {/* Destination */}
           <div className="relative z-10">
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 flex justify-center">
-              <div className="w-2.5 h-2.5 rounded-full bg-[#4f7eff] shadow" />
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 w-4 flex justify-center">
+              <Navigation size={14} className="text-[#2563eb]" />
             </div>
             <input
               type="text"
               placeholder="Where to?"
               value={destination}
               onChange={e => setDestination(e.target.value)}
-              className="w-full h-12 pl-10 pr-4 rounded-xl text-sm transition-all"
-              style={{
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.09)',
-                color: 'rgba(255,255,255,0.85)',
-                outline: 'none',
-              }}
+              className="w-full h-12 pl-[44px] pr-4 rounded text-sm bg-[#0a0d14] text-[#f9fafb] border border-[#1f2937] focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb] transition-all"
             />
           </div>
         </div>
@@ -131,51 +109,27 @@ export default function CustomerDashboard() {
             <Car size={18} />
             Book Ride
           </Button>
-          <Link to="/customer/voice-booking" className="shrink-0">
-            <Button variant="secondary" size="lg">
-              <Mic size={18} />
-              Voice
-            </Button>
-          </Link>
         </div>
       </div>
 
       {/* Saved locations */}
-      {customerData.savedLocations?.length > 0 && (
-        <div className="flex gap-3 overflow-x-auto pb-2 -mx-2 px-2 scrollbar-hide">
-          {customerData.savedLocations.map(loc => (
+      {(user?.savedLocations || []).length > 0 && (
+        <div className="flex gap-3 overflow-x-auto pb-2 -mx-2 px-2">
+          {(user?.savedLocations || []).map(loc => (
             <button
               key={loc.id}
               onClick={() => setDestination(loc.address)}
-              className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-150 shrink-0"
-              style={{
-                background: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                color: 'rgba(255,255,255,0.8)',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.background = 'rgba(79,126,255,0.1)';
-                e.currentTarget.style.borderColor = 'rgba(79,126,255,0.25)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
-              }}
+              className="flex items-center gap-2.5 px-4 py-2.5 rounded text-sm font-medium whitespace-nowrap bg-[#111827] border border-[#1f2937] text-[#9ca3af] hover:bg-[#1f2937] hover:text-white transition-all shrink-0"
             >
               {loc.label === 'Home'
-                ? <Home size={15} style={{ color: '#5b8eff' }} />
-                : <Briefcase size={15} style={{ color: '#818cf8' }} />
+                ? <Home size={15} className="text-[#2563eb]" />
+                : <Briefcase size={15} className="text-[#2563eb]" />
               }
               {loc.label}
             </button>
           ))}
           <button
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-150 shrink-0"
-            style={{
-              background: 'rgba(255,255,255,0.03)',
-              border: '1px dashed rgba(255,255,255,0.15)',
-              color: 'rgba(255,255,255,0.4)',
-            }}
+            className="flex items-center gap-2 px-4 py-2.5 rounded text-sm font-medium whitespace-nowrap bg-[#0a0d14] border border-dashed border-[#374151] text-[#6b7280] hover:text-[#9ca3af] hover:border-[#9ca3af] transition-all shrink-0"
           >
             <Plus size={15} />
             Add
@@ -190,11 +144,10 @@ export default function CustomerDashboard() {
       {recentRides.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.85)' }}>Recent Rides</h2>
+            <h2 className="text-sm font-semibold text-[#f9fafb]">Recent Rides</h2>
             <Link
               to="/customer/history"
-              className="text-xs font-medium hover:underline"
-              style={{ color: '#5b8eff', textDecoration: 'none' }}
+              className="text-xs font-medium text-[#2563eb] hover:underline"
             >
               View all
             </Link>

@@ -1,38 +1,65 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   Star, Phone, Share2, ShieldCheck, CheckCircle,
 } from 'lucide-react';
-import { mockRides } from '../../data/mockData';
 import MapPlaceholder from '../../components/map/MapPlaceholder';
 import SOSButton from '../../components/safety/SOSButton';
 import Button from '../../components/common/Button';
 import ConfirmationDialog from '../../components/common/ConfirmationDialog';
+import { useApi, apiPost } from '../../hooks/useApi';
 
 export default function TrackRide() {
   const { rideId } = useParams();
   const navigate = useNavigate();
-  const ride = mockRides.find(r => r.id === rideId) || mockRides[0];
+  const { data: bookings, loading } = useApi('/api/bookings');
+
+  const ride = bookings?.find(r => r.id === rideId) || bookings?.[0] || null;
 
   const [sosStep, setSosStep] = useState('idle'); // idle | confirm | sent
   const [cancelDialog, setCancelDialog] = useState(false);
   const [shared, setShared] = useState(false);
 
   const handleSOSTap = () => setSosStep('confirm');
-  const handleSOSConfirm = () => {
+  const handleSOSConfirm = async () => {
+    try {
+      await apiPost('/api/sos/trigger', { location: { lat: 9.5912, lng: 76.5222 } });
+    } catch (e) {
+      console.error(e);
+    }
     setSosStep('sent');
     setTimeout(() => navigate('/customer/sos'), 800);
   };
 
-  const handleShare = () => {
+  const handleShare = async () => {
+    try {
+      await apiPost('/api/location/share', { rideId: ride?.id });
+    } catch (e) {
+      console.error(e);
+    }
     setShared(true);
     setTimeout(() => setShared(false), 2000);
   };
 
-  const handleCancel = () => {
+  const handleCancel = async () => {
+    try {
+      if (ride) {
+        await apiPost(`/api/bookings/${ride.id}/cancel`, {});
+      }
+    } catch (e) {
+      console.error(e);
+    }
     setCancelDialog(false);
     navigate('/customer/dashboard');
   };
+
+  if (loading) {
+    return <div style={{ color: '#9ca3af', padding: '40px', textAlign: 'center' }}>Loading...</div>;
+  }
+
+  if (!ride) {
+    return <div style={{ color: '#9ca3af', padding: '40px', textAlign: 'center' }}>Ride not found</div>;
+  }
 
   return (
     <div className="flex flex-col h-full">
@@ -42,7 +69,7 @@ export default function TrackRide() {
       {/* Bottom card */}
       <div
         className="flex flex-col flex-1 overflow-y-auto px-4 sm:px-6 py-5 gap-4"
-        style={{ background: '#05091a' }}
+        style={{ background: '#0a0d14' }}
       >
         {/* SafeRide badge */}
         {ride.safeRideEnabled && (
@@ -53,9 +80,9 @@ export default function TrackRide() {
               border: '1px solid rgba(16,185,129,0.2)',
             }}
           >
-            <ShieldCheck size={16} style={{ color: '#10b981' }} />
+            <ShieldCheck size={16} style={{ color: '#16a34a' }} />
             <p className="text-sm font-medium flex-1" style={{ color: '#6ee7b7' }}>SafeRide Active</p>
-            <CheckCircle size={14} style={{ color: '#10b981' }} />
+            <CheckCircle size={14} style={{ color: '#16a34a' }} />
           </div>
         )}
 
@@ -63,8 +90,8 @@ export default function TrackRide() {
         <div
           className="rounded-2xl p-4"
           style={{
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.08)',
+            background: '#111827',
+            border: '1px solid #1f2937',
           }}
         >
           <div className="flex items-center gap-3 mb-4">
@@ -72,37 +99,39 @@ export default function TrackRide() {
               className="w-12 h-12 rounded-full flex items-center justify-center shrink-0"
               style={{ background: 'rgba(79,126,255,0.2)' }}
             >
-              <span className="text-lg font-bold" style={{ color: '#5b8eff' }}>
-                {ride.driverName.charAt(0)}
+              <span className="text-lg font-bold" style={{ color: '#2563eb' }}>
+                {ride.driverName?.charAt(0) || '?'}
               </span>
             </div>
             <div className="flex-1">
-              <p className="font-semibold" style={{ color: 'rgba(255,255,255,0.9)' }}>{ride.driverName}</p>
-              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                {ride.vehicleModel} · {ride.vehicleNumber}
+              <p className="font-semibold" style={{ color: '#f9fafb' }}>{ride.driverName || 'Assigning...'}</p>
+              <p className="text-xs" style={{ color: '#9ca3af' }}>
+                {ride.vehicleModel} {ride.vehicleNumber ? `· ${ride.vehicleNumber}` : ''}
               </p>
             </div>
             <div className="text-right">
-              <div className="flex items-center gap-1 justify-end">
-                <Star size={13} fill="#fbbf24" style={{ color: '#fbbf24' }} />
-                <span className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.9)' }}>
-                  {ride.driverRating}
-                </span>
-              </div>
-              <p className="text-xs font-medium mt-0.5" style={{ color: '#5b8eff' }}>{ride.eta} away</p>
+              {ride.driverRating && (
+                <div className="flex items-center gap-1 justify-end">
+                  <Star size={13} fill="#fbbf24" style={{ color: '#fbbf24' }} />
+                  <span className="text-sm font-semibold" style={{ color: '#f9fafb' }}>
+                    {ride.driverRating}
+                  </span>
+                </div>
+              )}
+              <p className="text-xs font-medium mt-0.5" style={{ color: '#2563eb' }}>{ride.eta || 'Pending'}</p>
             </div>
           </div>
 
           {/* Route */}
           <div className="flex flex-col gap-2 mb-4">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-[#10b981] shrink-0" />
-              <p className="text-sm" style={{ color: 'rgba(255,255,255,0.75)' }}>{ride.pickup}</p>
+              <div className="w-2 h-2 rounded-full bg-[#16a34a] shrink-0" />
+              <p className="text-sm" style={{ color: '#e5e7eb' }}>{ride.pickup}</p>
             </div>
-            <div className="ml-1 border-l-2 border-dashed h-3" style={{ borderColor: 'rgba(255,255,255,0.1)' }} />
+            <div className="ml-1 border-l-2 border-dashed h-3" style={{ borderColor: '#1f2937' }} />
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-[#4f7eff] shrink-0" />
-              <p className="text-sm" style={{ color: 'rgba(255,255,255,0.75)' }}>{ride.destination}</p>
+              <div className="w-2 h-2 rounded-full bg-[#2563eb] shrink-0" />
+              <p className="text-sm" style={{ color: '#e5e7eb' }}>{ride.destination}</p>
             </div>
           </div>
 
@@ -112,8 +141,8 @@ export default function TrackRide() {
               <Share2 size={14} />
               {shared ? 'Shared!' : 'Share Trip'}
             </Button>
-            <a href={`tel:${ride.driverPhone}`} className="flex-1">
-              <Button variant="secondary" fullWidth size="sm">
+            <a href={ride.driverPhone ? `tel:${ride.driverPhone}` : '#'} className="flex-1" style={{ pointerEvents: ride.driverPhone ? 'auto' : 'none' }}>
+              <Button variant="secondary" fullWidth size="sm" disabled={!ride.driverPhone}>
                 <Phone size={14} />
                 Call Driver
               </Button>

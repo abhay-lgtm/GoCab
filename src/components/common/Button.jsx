@@ -1,31 +1,31 @@
 import { clsx } from 'clsx';
 
 const base =
-  'inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#05091a] disabled:opacity-40 disabled:pointer-events-none select-none';
+  'inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0d14] disabled:opacity-40 disabled:pointer-events-none select-none';
 
 const variants = {
   primary:
-    'bg-gradient-to-br from-[#4f7eff] to-[#3b5ce4] text-white hover:brightness-110 active:scale-[0.98] focus-visible:ring-[#4f7eff] shadow-lg shadow-[#4f7eff]/25',
+    'bg-[#2563eb] text-white hover:bg-[#1d4ed8] active:bg-[#1e40af] focus-visible:ring-[#2563eb]',
   secondary:
-    'bg-white/6 text-white/80 border border-white/10 hover:bg-white/10 hover:text-white active:scale-[0.98] focus-visible:ring-white/20',
+    'bg-[#1f2937] text-[#f9fafb] border border-[#374151] hover:bg-[#374151] focus-visible:ring-[#374151]',
   danger:
-    'bg-[#ef4444] text-white hover:bg-red-500 active:scale-[0.98] focus-visible:ring-red-500 shadow-sm shadow-red-500/20',
+    'bg-[#dc2626] text-white hover:bg-[#b91c1c] focus-visible:ring-red-500',
   ghost:
-    'text-white/55 hover:bg-white/6 hover:text-white active:scale-[0.98] focus-visible:ring-white/20',
+    'text-[#9ca3af] hover:text-[#f9fafb] hover:bg-[#1f2937] focus-visible:ring-[#1f2937]',
   safety:
-    'bg-[#10b981] text-white hover:bg-emerald-500 active:scale-[0.98] focus-visible:ring-[#10b981] shadow-sm shadow-[#10b981]/25',
+    'bg-[#16a34a] text-white hover:bg-[#15803d] focus-visible:ring-[#16a34a]',
   outline:
-    'border border-[#4f7eff]/50 text-[#5b8eff] hover:bg-[#4f7eff]/10 active:scale-[0.98] focus-visible:ring-[#4f7eff]',
+    'border border-[#2563eb] text-[#2563eb] hover:bg-[#2563eb]/10 focus-visible:ring-[#2563eb]',
   navy:
-    'bg-white/8 text-white border border-white/10 hover:bg-white/12 active:scale-[0.98] focus-visible:ring-white/20 shadow-sm',
+    'bg-[#1f2937] text-[#f9fafb] border border-[#374151] hover:bg-[#374151] focus-visible:ring-[#374151]',
 };
 
 const sizes = {
-  sm: 'h-8 px-3 text-xs rounded-lg',
-  md: 'h-10 px-4 text-sm rounded-xl',
-  lg: 'h-12 px-6 text-base rounded-xl',
-  xl: 'h-14 px-8 text-base rounded-2xl',
-  icon: 'h-10 w-10 rounded-xl',
+  sm: 'h-8 px-3 text-xs rounded',
+  md: 'h-10 px-4 text-sm rounded',
+  lg: 'h-12 px-6 text-base rounded',
+  xl: 'h-14 px-8 text-base rounded',
+  icon: 'h-10 w-10 rounded',
 };
 
 export default function Button({

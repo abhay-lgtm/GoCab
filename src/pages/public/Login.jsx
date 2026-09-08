@@ -41,144 +41,95 @@ export default function Login() {
     if (!email || !password) { setError('Please fill in all fields.'); return; }
     setLoading(true);
     await new Promise(r => setTimeout(r, 600));
-    const result = login({ email, password, role });
+    const result = await login({ email, password, role });
     setLoading(false);
     if (!result.success) { setError(result.error); return; }
     navigate(result.dashboard, { replace: true });
   };
 
   return (
-    <div
-      className="min-h-screen flex flex-col lg:flex-row"
-      style={{ background: '#05091a', fontFamily: 'Inter, system-ui, sans-serif' }}
-    >
+    <div className="flex h-screen w-full bg-[#0a0d14] font-sans">
       {/* Left panel */}
-      <div
-        className="hidden lg:flex lg:w-[46%] flex-col justify-between p-12 relative overflow-hidden"
-        style={{ background: '#07091f', borderRight: '1px solid rgba(255,255,255,0.06)' }}
-      >
-        {/* Decorative glows */}
-        <div style={{
-          position: 'absolute', top: -150, left: -150, width: 500, height: 500,
-          background: 'radial-gradient(circle, rgba(79,126,255,0.12) 0%, transparent 70%)',
-          borderRadius: '50%', pointerEvents: 'none',
-        }} />
-        <div style={{
-          position: 'absolute', bottom: -100, right: -100, width: 400, height: 400,
-          background: 'radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 70%)',
-          borderRadius: '50%', pointerEvents: 'none',
-        }} />
-        {/* Grid */}
-        <div style={{
-          position: 'absolute', inset: 0, pointerEvents: 'none',
-          backgroundImage: 'linear-gradient(rgba(79,126,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(79,126,255,0.03) 1px, transparent 1px)',
-          backgroundSize: '50px 50px',
-        }} />
-
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-            <RideSphereLogoMark size={30} />
-            <span style={{ fontSize: 18, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>
-              Ride<span style={{ color: '#5b8eff' }}>Sphere</span>
-            </span>
+      <div className="hidden lg:flex lg:w-[46%] flex-col justify-between p-12 bg-[#111827] border-r border-[#1f2937]">
+        <div>
+          <Link to="/" className="flex items-center gap-2 text-white no-underline">
+            <span className="text-xl font-bold tracking-tight">GoCab</span>
           </Link>
         </div>
 
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <blockquote style={{ fontSize: 26, fontWeight: 700, color: '#fff', lineHeight: 1.3, marginBottom: 16, letterSpacing: '-0.02em' }}>
+        <div>
+          <blockquote className="text-3xl font-bold text-white leading-tight mb-4 tracking-tight">
             "Every great journey starts with a single tap."
           </blockquote>
-          <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 14 }}>
+          <p className="text-[#9ca3af] text-sm">
             Smart rides. Safer journeys. Trusted by 50,000+ riders across Kerala.
           </p>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, position: 'relative', zIndex: 1 }}>
-          {['A', 'P', 'R', 'S'].map((l, i) => (
-            <div
-              key={i}
-              style={{
-                width: 32, height: 32, borderRadius: '50%',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 12, fontWeight: 700, color: '#fff',
-                background: ['rgba(79,126,255,0.7)', 'rgba(16,185,129,0.7)', 'rgba(99,102,241,0.7)', 'rgba(245,158,11,0.7)'][i],
-              }}
-            >
-              {l}
-            </div>
-          ))}
-          <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12 }}>50K+ riders trust RideSphere</p>
+        <div className="flex items-center gap-3">
+          <div className="flex -space-x-2">
+            {['A', 'P', 'R', 'S'].map((l, i) => (
+              <div
+                key={i}
+                className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white border-2 border-[#111827] bg-[#1f2937]"
+              >
+                {l}
+              </div>
+            ))}
+          </div>
+          <p className="text-[#6b7280] text-xs">50K+ riders trust GoCab</p>
         </div>
       </div>
 
       {/* Form panel */}
-      <div
-        className="flex-1 overflow-y-auto flex flex-col justify-center items-center"
-        style={{ background: '#05091a' }}
-      >
+      <div className="flex-1 overflow-y-auto flex flex-col justify-center items-center bg-[#0a0d14]">
         <div className="w-full max-w-lg mx-auto px-6 py-10 lg:py-16">
           {/* Mobile logo */}
           <div className="flex justify-center mb-8 lg:hidden">
-            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
-              <RideSphereLogoMark size={26} />
-              <span style={{ fontSize: 16, fontWeight: 800, color: '#fff' }}>
-                Ride<span style={{ color: '#5b8eff' }}>Sphere</span>
-              </span>
+            <Link to="/" className="flex items-center gap-2 text-white no-underline">
+              <span className="text-xl font-bold tracking-tight">GoCab</span>
             </Link>
           </div>
 
-          <h1 style={{ fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 6, letterSpacing: '-0.02em' }}>
+          <h1 className="text-2xl font-bold text-white mb-2 tracking-tight">
             Welcome back
           </h1>
-          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', marginBottom: 28 }}>
+          <p className="text-sm text-[#9ca3af] mb-8">
             Sign in to your account to continue.
           </p>
 
           {/* Role selector */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 20 }}>
+          <div className="grid grid-cols-3 gap-2 mb-6">
             {roles.map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
                 onClick={() => { setRole(id); setError(''); }}
-                style={{
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
-                  padding: '12px 8px', borderRadius: 14, border: 'none', cursor: 'pointer',
-                  fontSize: 12, fontWeight: 600, transition: 'all 0.15s',
-                  background: role === id ? 'rgba(79,126,255,0.15)' : 'rgba(255,255,255,0.04)',
-                  color: role === id ? '#5b8eff' : 'rgba(255,255,255,0.45)',
-                  outline: role === id ? '1px solid rgba(79,126,255,0.4)' : '1px solid rgba(255,255,255,0.07)',
-                }}
+                className={`flex flex-col items-center gap-2 p-3 rounded border transition-all duration-150 ${
+                  role === id
+                    ? 'bg-[#2563eb] text-white border-[#2563eb]'
+                    : 'bg-[#111827] text-[#9ca3af] border-[#1f2937] hover:text-white'
+                }`}
               >
                 <Icon size={18} />
-                {label}
+                <span className="text-xs font-semibold">{label}</span>
               </button>
             ))}
           </div>
 
           {/* Demo hint */}
-          <div
-            style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              background: 'rgba(79,126,255,0.08)', border: '1px solid rgba(79,126,255,0.2)',
-              borderRadius: 12, padding: '10px 14px', marginBottom: 20,
-            }}
-          >
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>
-              Demo: <span style={{ fontFamily: 'monospace', color: '#5b8eff' }}>{hints[role].email}</span>
+          <div className="flex items-center justify-between bg-[#111827] border border-[#1f2937] rounded p-3 mb-6">
+            <p className="text-xs text-[#9ca3af]">
+              Demo: <span className="font-mono text-[#2563eb]">{hints[role].email}</span>
             </p>
             <button
               onClick={handleFill}
-              style={{
-                fontSize: 12, fontWeight: 600, color: '#5b8eff',
-                background: 'none', border: 'none', cursor: 'pointer',
-                textDecoration: 'underline', textUnderlineOffset: 2,
-              }}
+              className="text-xs font-semibold text-[#2563eb] hover:underline"
             >
               Fill
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <Input
               label="Email or Phone"
               id="login-email"
@@ -189,34 +140,36 @@ export default function Login() {
               onChange={e => setEmail(e.target.value)}
               autoComplete="email"
             />
-            <Input
-              label="Password"
-              id="login-password"
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Your password"
-              icon={Lock}
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              autoComplete="current-password"
-              iconRight={showPassword ? EyeOff : Eye}
-            />
+            <div className="relative">
+              <Input
+                label="Password"
+                id="login-password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Your password"
+                icon={Lock}
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                autoComplete="current-password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-[34px] text-[#9ca3af] hover:text-white focus:outline-none"
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
 
             {error && (
-              <p
-                style={{
-                  fontSize: 13, color: '#f87171',
-                  background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)',
-                  borderRadius: 10, padding: '8px 12px',
-                }}
-              >
+              <p className="text-xs text-[#dc2626] bg-[#dc2626]/10 border border-[#dc2626]/20 rounded p-2">
                 {error}
               </p>
             )}
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <div className="flex justify-end">
               <button
                 type="button"
-                style={{ fontSize: 12, color: '#5b8eff', background: 'none', border: 'none', cursor: 'pointer' }}
+                className="text-xs text-[#2563eb] hover:underline"
                 onClick={() => alert('Password reset not implemented in demo.')}
               >
                 Forgot password?
@@ -229,9 +182,9 @@ export default function Login() {
             </Button>
           </form>
 
-          <p style={{ textAlign: 'center', fontSize: 14, color: 'rgba(255,255,255,0.35)', marginTop: 20 }}>
+          <p className="text-center text-sm text-[#9ca3af] mt-6">
             Don&apos;t have an account?{' '}
-            <Link to="/register" style={{ color: '#5b8eff', fontWeight: 600, textDecoration: 'none' }}>
+            <Link to="/register" className="text-[#2563eb] font-semibold hover:underline">
               Create one
             </Link>
           </p>

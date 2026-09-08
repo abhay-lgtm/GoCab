@@ -1,26 +1,34 @@
-import { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AlertTriangle } from 'lucide-react';
-import { mockSOSAlerts } from '../../data/mockData';
 import SOSAlertCard from '../../components/admin/SOSAlertCard';
+import { useApi, apiPost } from '../../hooks/useApi';
 
 export default function AdminSOSAlerts() {
   const navigate = useNavigate();
-  const [alerts, setAlerts] = useState(mockSOSAlerts);
+  const { data: alerts, loading, refetch } = useApi('/api/sos');
 
-  const handleResolve = (id) => {
-    setAlerts(prev =>
-      prev.map(a => a.id === id ? { ...a, status: 'resolved', resolvedAt: new Date().toLocaleTimeString() } : a)
-    );
+  const handleResolve = async (id) => {
+    try {
+      await apiPost(`/api/sos/${id}/resolve`, {});
+      refetch();
+    } catch (e) {
+      console.error(e);
+    }
   };
 
-  const active = alerts.filter(a => a.status === 'active');
-  const resolved = alerts.filter(a => a.status === 'resolved');
+  if (loading) {
+    return <div style={{ color: '#9ca3af', padding: '40px', textAlign: 'center' }}>Loading...</div>;
+  }
+
+  const allAlerts = alerts || [];
+  const active = allAlerts.filter(a => a.status === 'active');
+  const resolved = allAlerts.filter(a => a.status === 'resolved');
 
   return (
     <div className="flex flex-col max-w-3xl mx-auto px-4 sm:px-6 py-6 gap-5">
       <div>
-        <h1 className="text-2xl font-bold text-[#0a0f1e]">SOS Alerts</h1>
+        <h1 className="text-2xl font-bold text-[#f9fafb] tracking-tight">SOS Alerts</h1>
         <p className="text-sm text-[#9ca3af]">{active.length} active · {resolved.length} resolved</p>
       </div>
 
@@ -34,8 +42,8 @@ export default function AdminSOSAlerts() {
             <SOSAlertCard
               key={alert.id}
               alert={alert}
-              onResolve={handleResolve}
-              onViewRide={(rideId) => navigate(`/admin/rides`)}
+              onResolve={() => handleResolve(alert.id)}
+              onViewRide={() => navigate(`/admin/rides`)}
             />
           ))}
         </div>
@@ -48,8 +56,8 @@ export default function AdminSOSAlerts() {
             <SOSAlertCard
               key={alert.id}
               alert={alert}
-              onResolve={handleResolve}
-              onViewRide={(rideId) => navigate(`/admin/rides`)}
+              onResolve={() => handleResolve(alert.id)}
+              onViewRide={() => navigate(`/admin/rides`)}
             />
           ))}
         </div>

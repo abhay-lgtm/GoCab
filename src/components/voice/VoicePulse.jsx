@@ -13,7 +13,7 @@ export default function VoicePulse({ active = false }) {
       {bars.map((height, i) => (
         <span
           key={i}
-          className="w-1 rounded-full bg-[#3b6ef8] animate-wave-bar"
+          className="w-1 rounded-full bg-[#2563eb] animate-wave-bar"
           style={{
             height: `${height}px`,
             animationDelay: `${i * 0.08}s`,

@@ -9,17 +9,17 @@ export default function SOSButton({ onClick, className = '' }) {
     <button
       onClick={onClick}
       aria-label="SOS Emergency"
-      className={`relative flex items-center justify-center gap-2 font-bold text-sm tracking-widest uppercase rounded-2xl px-8 py-3.5 transition-all duration-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 ${className}`}
+      className={`relative flex items-center justify-center gap-2 font-bold text-sm tracking-widest uppercase rounded px-8 py-3.5 transition-all duration-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 ${className}`}
       style={{
-        background: 'rgba(239,68,68,0.1)',
+        background: '#111827',
         border: '2px solid rgba(239,68,68,0.5)',
-        color: '#f87171',
+        color: '#ef4444',
         boxShadow: '0 0 30px rgba(239,68,68,0.15)',
-        focusRingOffsetColor: '#05091a',
+        focusRingOffsetColor: '#0a0d14',
       }}
       onMouseEnter={e => {
         e.currentTarget.style.background = 'rgba(239,68,68,0.2)';
-        e.currentTarget.style.borderColor = '#ef4444';
+        e.currentTarget.style.borderColor = '#dc2626';
         e.currentTarget.style.boxShadow = '0 0 40px rgba(239,68,68,0.3)';
       }}
       onMouseLeave={e => {

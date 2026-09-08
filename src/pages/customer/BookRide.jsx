@@ -9,12 +9,6 @@ const rideTypes = [
   { id: 'pool', label: 'Pool', icon: Users, desc: 'Share & save', eta: '12 min', fare: '₹110 – ₹13/km' },
 ];
 
-const glass = {
-  background: 'rgba(255,255,255,0.04)',
-  border: '1px solid rgba(255,255,255,0.08)',
-  borderRadius: 20,
-};
-
 export default function BookRide() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,113 +17,99 @@ export default function BookRide() {
   const [pickup, setPickup] = useState(initialState.pickup || '');
   const [destination, setDestination] = useState(initialState.destination || '');
   const [rideType, setRideType] = useState('standard');
+  const [activeField, setActiveField] = useState(null);
 
   const handleProceed = () => {
     if (!pickup.trim() || !destination.trim()) return;
     navigate('/customer/confirm', { state: { pickup, destination, rideType } });
   };
 
-
-
   return (
     <div className="w-full max-w-xl mx-auto mt-20 flex flex-col gap-8 pb-8">
       <div>
-        <h1 className="text-2xl font-bold" style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
+        <h1 className="text-2xl font-bold text-[#f9fafb] tracking-tight">
           Book a Ride
         </h1>
-        <p className="text-sm mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>Enter your route to get started.</p>
+        <p className="text-sm mt-0.5 text-[#9ca3af]">Enter your route to get started.</p>
       </div>
 
       {/* Route inputs */}
-      <div style={{ ...glass, padding: 24 }} className="relative flex flex-col gap-3">
-        {/* Connection Line */}
-        <div className="absolute left-[39px] top-[48px] bottom-[48px] border-l-2 border-dashed z-0" style={{ borderColor: 'rgba(255,255,255,0.15)' }} />
-        
-        <div className="relative z-10">
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 flex justify-center">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#10b981] shadow" />
+      <div className="relative flex flex-col p-6 bg-[#111827] border border-[#1f2937] rounded">
+        <div className="relative flex flex-col gap-3">
+          {/* Pickup row */}
+          <div className="relative h-12">
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#16a34a]" />
+            </div>
+            {/* Connector line: from bottom of pickup dot to top of destination dot */}
+            <div
+              className="absolute border-l-2 border-dashed border-[#374151] z-0"
+              style={{ left: '18.75px', top: '50%', height: 'calc(100% + 12px)' }}
+            />
+            <input
+              type="text"
+              placeholder="Pickup location"
+              value={pickup}
+              onChange={e => setPickup(e.target.value)}
+              onFocus={() => setActiveField('pickup')}
+              className="w-full h-12 pl-[44px] pr-4 rounded text-sm bg-[#0a0d14] text-[#f9fafb] border border-[#1f2937] focus:border-[#2563eb] focus:outline-none focus:ring-1 focus:ring-[#2563eb] transition-all"
+            />
           </div>
-          <input
-            type="text"
-            placeholder="Pickup location"
-            value={pickup}
-            onChange={e => setPickup(e.target.value)}
-            className="w-full h-12 pl-10 pr-4 rounded-xl text-sm transition-all"
-            style={{
-              background: 'rgba(255,255,255,0.06)',
-              border: '1px solid rgba(255,255,255,0.09)',
-              color: 'rgba(255,255,255,0.85)',
-              outline: 'none',
-            }}
-          />
-        </div>
-        <div className="relative z-10">
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 flex justify-center">
-            <Navigation size={14} style={{ color: '#5b8eff' }} />
+          {/* Destination row */}
+          <div className="relative h-12">
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
+              <Navigation size={14} className="text-[#2563eb]" />
+            </div>
+            <input
+              type="text"
+              placeholder="Where to?"
+              value={destination}
+              onChange={e => setDestination(e.target.value)}
+              onFocus={() => setActiveField('destination')}
+              className="w-full h-12 pl-[44px] pr-4 rounded text-sm bg-[#0a0d14] text-[#f9fafb] border border-[#1f2937] focus:border-[#2563eb] focus:outline-none focus:ring-1 focus:ring-[#2563eb] transition-all"
+            />
           </div>
-          <input
-            type="text"
-            placeholder="Where to?"
-            value={destination}
-            onChange={e => setDestination(e.target.value)}
-            className="w-full h-12 pl-10 pr-4 rounded-xl text-sm transition-all"
-            style={{
-              background: 'rgba(255,255,255,0.06)',
-              border: '1px solid rgba(255,255,255,0.09)',
-              color: 'rgba(255,255,255,0.85)',
-              outline: 'none',
-            }}
-          />
         </div>
       </div>
 
       {/* Quick suggestions */}
-      <div>
-        <p className="text-xs font-medium uppercase tracking-wide mb-3" style={{ color: 'rgba(255,255,255,0.3)' }}>
-          Suggestions
-        </p>
-        <div className="flex flex-col gap-2">
-          {[
-            { label: 'IIIT Kottayam', sub: 'Pala Road, Kottayam' },
-            { label: 'Kottayam Railway Station', sub: 'Baker Junction, Kottayam' },
-            { label: 'Kottayam Medical College', sub: 'Gandhinagar, Kottayam' },
-          ].map(s => (
-            <button
-              key={s.label}
-              onClick={() => setDestination(s.label)}
-              className="flex items-center gap-4 w-full px-4 py-3.5 rounded-xl text-left transition-all"
-              style={{
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.07)',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.07)';
-                e.currentTarget.style.borderColor = 'rgba(79,126,255,0.2)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
-                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)';
-              }}
-            >
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
-                style={{ background: 'rgba(255,255,255,0.06)' }}
+      {activeField && (
+        <div>
+          <p className="text-xs font-medium uppercase tracking-wide mb-3 text-[#9ca3af]">
+            Suggestions
+          </p>
+          <div className="flex flex-col gap-2">
+            {[
+              { label: 'IIIT Kottayam', sub: 'Pala Road, Kottayam' },
+              { label: 'Kottayam Railway Station', sub: 'Baker Junction, Kottayam' },
+              { label: 'Kottayam Medical College', sub: 'Gandhinagar, Kottayam' },
+            ].map(s => (
+              <button
+                key={s.label}
+                onClick={() => {
+                  if (activeField === 'pickup') setPickup(s.label);
+                  else setDestination(s.label);
+                  setActiveField(null);
+                }}
+                className="flex items-center gap-4 w-full px-4 py-3.5 rounded text-left bg-[#111827] border border-[#1f2937] hover:bg-[#1f2937] hover:border-[#374151] transition-all"
               >
-                <MapPin size={16} style={{ color: 'rgba(255,255,255,0.3)' }} />
-              </div>
-              <div>
-                <p className="text-sm font-semibold mb-0.5" style={{ color: 'rgba(255,255,255,0.85)' }}>{s.label}</p>
-                <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>{s.sub}</p>
-              </div>
-            </button>
-          ))}
+                <div className="w-10 h-10 rounded flex items-center justify-center shrink-0 bg-[#0a0d14]">
+                  <MapPin size={16} className="text-[#6b7280]" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold mb-0.5 text-[#f9fafb]">{s.label}</p>
+                  <p className="text-xs text-[#9ca3af]">{s.sub}</p>
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Ride type selector */}
       {pickup && destination && (
         <div className="animate-slide-up">
-          <p className="text-xs font-medium uppercase tracking-wide mb-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
+          <p className="text-xs font-medium uppercase tracking-wide mb-2 text-[#9ca3af]">
             Ride Type
           </p>
           <div className="flex flex-col gap-2">
@@ -139,25 +119,22 @@ export default function BookRide() {
                 <button
                   key={id}
                   onClick={() => setRideType(id)}
-                  className="flex items-center gap-4 w-full px-4 py-3.5 rounded-xl text-left transition-all duration-150"
-                  style={{
-                    background: active ? 'rgba(79,126,255,0.12)' : 'rgba(255,255,255,0.04)',
-                    border: active ? '1px solid rgba(79,126,255,0.35)' : '1px solid rgba(255,255,255,0.07)',
-                  }}
+                  className={`flex items-center gap-4 w-full px-4 py-3.5 rounded text-left transition-all duration-150 ${
+                    active 
+                      ? 'bg-[#2563eb]/10 border border-[#2563eb]' 
+                      : 'bg-[#111827] border border-[#1f2937] hover:border-[#374151]'
+                  }`}
                 >
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ background: active ? '#4f7eff' : 'rgba(255,255,255,0.07)' }}
-                  >
-                    <Icon size={18} style={{ color: active ? '#fff' : 'rgba(255,255,255,0.3)' }} />
+                  <div className={`w-10 h-10 rounded flex items-center justify-center shrink-0 ${active ? 'bg-[#2563eb]' : 'bg-[#1f2937]'}`}>
+                    <Icon size={18} className={active ? 'text-white' : 'text-[#9ca3af]'} />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.9)' }}>{label}</p>
-                    <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>{desc}</p>
+                    <p className={`text-sm font-semibold ${active ? 'text-white' : 'text-[#f9fafb]'}`}>{label}</p>
+                    <p className="text-xs text-[#9ca3af]">{desc}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.8)' }}>{fare}</p>
-                    <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>{eta}</p>
+                    <p className={`text-xs font-medium ${active ? 'text-white' : 'text-[#f9fafb]'}`}>{fare}</p>
+                    <p className="text-xs text-[#9ca3af]">{eta}</p>
                   </div>
                 </button>
               );

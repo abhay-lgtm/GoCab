@@ -38,13 +38,7 @@ export default function MobileNavigation() {
 
   return (
     <nav
-      className="md:hidden fixed bottom-0 inset-x-0 z-40 safe-area-bottom"
-      style={{
-        background: 'rgba(5,9,26,0.92)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        borderTop: '1px solid rgba(255,255,255,0.07)',
-      }}
+      className="md:hidden fixed bottom-0 inset-x-0 z-40 safe-area-bottom bg-[#0a0d14] border-t border-[#1f2937]"
     >
       <ul className="flex items-center justify-around h-16 px-2">
         {links.map(({ to, label, icon: Icon }) => (
@@ -53,8 +47,8 @@ export default function MobileNavigation() {
               to={to}
               className={({ isActive }) =>
                 clsx(
-                  'flex flex-col items-center justify-center gap-0.5 py-1 rounded-xl transition-all duration-150 w-full',
-                  isActive ? 'text-[#5b8eff]' : 'text-white/35 hover:text-white/60'
+                  'flex flex-col items-center justify-center gap-0.5 py-1 rounded transition-all duration-150 w-full',
+                  isActive ? 'text-[#2563eb]' : 'text-[#6b7280] hover:text-[#9ca3af]'
                 )
               }
             >
@@ -62,8 +56,8 @@ export default function MobileNavigation() {
                 <>
                   <span
                     className={clsx(
-                      'w-10 h-7 flex items-center justify-center rounded-xl transition-all duration-150',
-                      isActive && 'bg-[#4f7eff]/15'
+                      'w-10 h-7 flex items-center justify-center rounded transition-all duration-150',
+                      isActive && 'bg-[#2563eb]/15'
                     )}
                   >
                     <Icon size={20} />
