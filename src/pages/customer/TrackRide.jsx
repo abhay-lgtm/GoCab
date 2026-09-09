@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
-  Star, Phone, Share2, ShieldCheck, CheckCircle,
+  Star, Phone, Share2, ShieldCheck, CheckCircle, Key,
 } from 'lucide-react';
 import MapPlaceholder from '../../components/map/MapPlaceholder';
 import SOSButton from '../../components/safety/SOSButton';
@@ -12,18 +12,27 @@ import { useApi, apiPost } from '../../hooks/useApi';
 export default function TrackRide() {
   const { rideId } = useParams();
   const navigate = useNavigate();
-  const { data: bookings, loading } = useApi('/api/bookings');
+  const { data: bookings, loading } = useApi('/api/bookings', { pollInterval: 3000 });
 
-  const ride = bookings?.find(r => r.id === rideId) || bookings?.[0] || null;
+  const ride = bookings?.find(r => r.id === rideId) || bookings?.find(b => b.status === 'pending' || b.status === 'accepted' || b.status === 'in_progress') || bookings?.[0] || null;
 
   const [sosStep, setSosStep] = useState('idle'); // idle | confirm | sent
   const [cancelDialog, setCancelDialog] = useState(false);
   const [shared, setShared] = useState(false);
 
+  useEffect(() => {
+    if (ride?.status === 'completed') {
+      navigate(`/customer/payment/${ride.id}`);
+    }
+  }, [ride?.status, ride?.id, navigate]);
+
   const handleSOSTap = () => setSosStep('confirm');
   const handleSOSConfirm = async () => {
     try {
-      await apiPost('/api/sos/trigger', { location: { lat: 9.5912, lng: 76.5222 } });
+      await apiPost('/api/sos/trigger', {
+        rideId: ride?.id,
+        location: { lat: 9.5912, lng: 76.5222 },
+      });
     } catch (e) {
       console.error(e);
     }
@@ -71,8 +80,26 @@ export default function TrackRide() {
         className="flex flex-col flex-1 overflow-y-auto px-4 sm:px-6 py-5 gap-4"
         style={{ background: '#0a0d14' }}
       >
+        {/* Start Ride OTP */}
+        {ride.otp && (ride.status === 'pending' || ride.status === 'accepted') && (
+          <div className="flex items-center justify-between p-4 bg-[#111827] border border-[#2563eb]/40 rounded-2xl animate-fade-in">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-[#2563eb]/20 text-[#3b82f6] shrink-0">
+                <Key size={18} />
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-[#93c5fd] uppercase tracking-wider">Start Ride PIN</p>
+                <p className="text-xs text-[#9ca3af]">Share this PIN with your driver</p>
+              </div>
+            </div>
+            <div className="px-4 py-1.5 bg-[#1e3a5f] border border-[#2563eb] rounded-xl">
+              <span className="text-2xl font-bold tracking-widest text-white font-mono">{ride.otp}</span>
+            </div>
+          </div>
+        )}
+
         {/* SafeRide badge */}
-        {ride.safeRideEnabled && (
+        {Boolean(ride.safeRideEnabled) && (
           <div
             className="flex items-center gap-2 rounded-xl px-3 py-2 animate-fade-in"
             style={{
@@ -104,9 +131,9 @@ export default function TrackRide() {
               </span>
             </div>
             <div className="flex-1">
-              <p className="font-semibold" style={{ color: '#f9fafb' }}>{ride.driverName || 'Assigning...'}</p>
+              <p className="font-semibold" style={{ color: '#f9fafb' }}>{ride.driverName || 'Assigning driver...'}</p>
               <p className="text-xs" style={{ color: '#9ca3af' }}>
-                {ride.vehicleModel} {ride.vehicleNumber ? `· ${ride.vehicleNumber}` : ''}
+                {ride.vehicleModel ? `${ride.vehicleModel}${ride.vehicleNumber ? ` · ${ride.vehicleNumber}` : ''}` : (ride.status === 'pending' ? 'Searching for nearby driver...' : 'Vehicle details pending')}
               </p>
             </div>
             <div className="text-right">
@@ -118,7 +145,9 @@ export default function TrackRide() {
                   </span>
                 </div>
               )}
-              <p className="text-xs font-medium mt-0.5" style={{ color: '#2563eb' }}>{ride.eta || 'Pending'}</p>
+              <p className="text-xs font-medium mt-0.5" style={{ color: '#2563eb' }}>
+                {ride.status === 'pending' ? 'Searching...' : (ride.eta || 'Pending')}
+              </p>
             </div>
           </div>
 

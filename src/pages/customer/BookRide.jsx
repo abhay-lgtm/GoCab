@@ -21,7 +21,14 @@ export default function BookRide() {
 
   const handleProceed = () => {
     if (!pickup.trim() || !destination.trim()) return;
-    navigate('/customer/confirm', { state: { pickup, destination, rideType } });
+    navigate('/customer/confirm', {
+      state: {
+        pickup,
+        destination,
+        rideType,
+        safeRideEnabled: initialState.safeRideEnabled,
+      },
+    });
   };
 
   return (

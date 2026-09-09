@@ -51,6 +51,7 @@ db.exec(`
     eta TEXT,
     safeRideEnabled INTEGER,
     rideType TEXT,
+    otp TEXT,
     createdAt TEXT
   );
 
@@ -73,6 +74,19 @@ db.exec(`
     timestamp TEXT
   );
 `);
+
+try {
+  db.exec('ALTER TABLE bookings ADD COLUMN otp TEXT');
+} catch (e) {
+  // column already exists
+}
+try {
+  db.exec("UPDATE bookings SET otp = '1234' WHERE otp IS NULL");
+} catch (e) {}
+
+try {
+  db.exec('ALTER TABLE users ADD COLUMN safeRideEnabled INTEGER DEFAULT 1');
+} catch (e) {}
 
 // Seed data
 const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get().count;

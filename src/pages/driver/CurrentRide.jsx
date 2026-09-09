@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
-  Phone, ShieldCheck, CheckCircle, Play, Flag,
+  Phone, ShieldCheck, CheckCircle, Play, Flag, Key,
 } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatCurrency';
 import MapPlaceholder from '../../components/map/MapPlaceholder';
@@ -11,17 +11,41 @@ import { useApi, apiPost } from '../../hooks/useApi';
 export default function DriverCurrentRide() {
   const { rideId } = useParams();
   const navigate = useNavigate();
-  const { data: bookings, loading: apiLoading } = useApi('/api/bookings');
+  const { data: bookings, loading: apiLoading, refetch } = useApi('/api/bookings', { pollInterval: 3000 });
   
-  const ride = bookings?.find(r => r.id === rideId) || null;
+  const ride = bookings?.find(r => r.id === rideId) || bookings?.find(b => b.status === 'accepted' || b.status === 'in_progress') || null;
   const [status, setStatus] = useState('accepted');
   const [loading, setLoading] = useState(false);
+  const [otpInput, setOtpInput] = useState('');
+  const [otpError, setOtpError] = useState('');
+
+  useEffect(() => {
+    if (ride?.status) {
+      if (ride.status === 'in_progress') setStatus('started');
+      else setStatus(ride.status);
+    }
+  }, [ride?.status]);
 
   const handleStart = async () => {
+    if (!otpInput || otpInput.trim().length !== 4) {
+      setOtpError('Please enter the 4-digit PIN provided by passenger.');
+      return;
+    }
+
     setLoading(true);
-    await new Promise(r => setTimeout(r, 800)); // Simulate start ride API
-    setLoading(false);
-    setStatus('started');
+    setOtpError('');
+    try {
+      if (ride) {
+        await apiPost(`/api/bookings/${ride.id}/start`, { otp: otpInput.trim() });
+      }
+      setStatus('started');
+      refetch();
+    } catch (e) {
+      console.error(e);
+      setOtpError(e.message || 'Invalid OTP. Please check with the passenger.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleComplete = async () => {
@@ -30,11 +54,13 @@ export default function DriverCurrentRide() {
       if (ride) {
         await apiPost(`/api/bookings/${ride.id}/complete`, {});
       }
+      setStatus('completed');
+      refetch();
     } catch (e) {
       console.error(e);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-    setStatus('completed');
   };
 
   if (apiLoading) {
@@ -104,7 +130,7 @@ export default function DriverCurrentRide() {
           className="flex flex-col rounded p-4 gap-3"
           style={{ background: '#111827', border: '1px solid #1f2937' }}
         >
-          {ride?.safeRideEnabled && (
+          {Boolean(ride?.safeRideEnabled) && (
             <div className="flex items-center gap-2 text-xs font-medium mb-1" style={{ color: '#16a34a' }}>
               <ShieldCheck size={14} />
               SafeRide Passenger
@@ -154,10 +180,43 @@ export default function DriverCurrentRide() {
 
         {/* Action buttons */}
         {status === 'accepted' && (
-          <Button variant="primary" fullWidth size="lg" onClick={handleStart} loading={loading}>
-            <Play size={18} />
-            Start Ride
-          </Button>
+          <div className="flex flex-col rounded p-4 gap-3 bg-[#111827] border border-[#1f2937]">
+            <div className="flex items-center gap-2">
+              <Key size={16} className="text-[#2563eb]" />
+              <p className="text-sm font-semibold text-[#f9fafb]">Enter Passenger PIN</p>
+            </div>
+            <p className="text-xs text-[#9ca3af]">
+              Ask the passenger for their 4-digit ride OTP to start the trip.
+            </p>
+            <div className="flex flex-col gap-2">
+              <input
+                type="text"
+                inputMode="numeric"
+                maxLength={4}
+                placeholder="• • • •"
+                value={otpInput}
+                onChange={e => {
+                  setOtpInput(e.target.value.replace(/\D/g, '').slice(0, 4));
+                  if (otpError) setOtpError('');
+                }}
+                className="w-full text-center text-2xl font-bold tracking-[0.5em] py-2.5 px-4 rounded bg-[#0a0d14] border border-[#1f2937] text-white focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb] font-mono"
+              />
+              {otpError && (
+                <p className="text-xs text-red-400 font-medium text-center">{otpError}</p>
+              )}
+            </div>
+            <Button
+              variant="primary"
+              fullWidth
+              size="lg"
+              onClick={handleStart}
+              loading={loading}
+              disabled={otpInput.length !== 4}
+            >
+              <Play size={18} />
+              Verify PIN & Start Ride
+            </Button>
+          </div>
         )}
         {status === 'started' && (
           <Button variant="safety" fullWidth size="lg" onClick={handleComplete} loading={loading}>

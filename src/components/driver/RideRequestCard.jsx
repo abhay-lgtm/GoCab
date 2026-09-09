@@ -24,7 +24,7 @@ export default function RideRequestCard({ request, onAccept, onReject }) {
             {request.customerName}
           </p>
         </div>
-        {request.safeRideEnabled && (
+        {Boolean(request.safeRideEnabled) && (
           <span
             className="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-lg"
             style={{ color: '#16a34a', background: '#111827', border: '1px solid rgba(16,185,129,0.25)' }}
@@ -83,7 +83,7 @@ export default function RideRequestCard({ request, onAccept, onReject }) {
         </div>
         <div className="flex items-center gap-1 text-xs font-semibold" style={{ color: '#f9fafb' }}>
           <IndianRupee size={12} />
-          {formatCurrency(request.estimatedFare)}
+          {formatCurrency(request.estimatedFare ?? request.total)}
         </div>
       </div>
 

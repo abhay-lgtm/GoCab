@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   MapPin, Navigation, Clock, Car, ShieldCheck, ChevronRight, Edit3,
 } from 'lucide-react';
 import Button from '../../components/common/Button';
 import { formatCurrency } from '../../utils/formatCurrency';
+import { useApi, apiPost } from '../../hooks/useApi';
 
 const driverOptions = [
   { id: 'any',      label: 'Any Available Driver',   desc: 'Fastest match' },
@@ -19,6 +20,12 @@ const glass = {
   padding: 20,
 };
 
+const fareConfigs = {
+  standard: { base: 40, ride: 280, total: 320, eta: '5 min', label: 'Standard' },
+  premium: { base: 60, ride: 390, total: 450, eta: '8 min', label: 'Premium' },
+  pool: { base: 30, ride: 190, total: 220, eta: '12 min', label: 'Pool' },
+};
+
 export default function RideConfirmation() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,16 +35,52 @@ export default function RideConfirmation() {
     rideType: 'standard',
   };
 
-  const [driverPref, setDriverPref] = useState('verified');
+  const { data: profile } = useApi('/api/users/me');
+  const [driverPref, setDriverPref] = useState(
+    state.safeRideEnabled === 0 ? 'any' : 'verified'
+  );
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const fare = { base: 40, ride: 280, total: 320 };
+  useEffect(() => {
+    if (state.safeRideEnabled !== undefined) {
+      setDriverPref(state.safeRideEnabled ? 'verified' : 'any');
+    } else if (profile && profile.safeRideEnabled !== undefined) {
+      setDriverPref(profile.safeRideEnabled ? 'verified' : 'any');
+    }
+  }, [profile, state.safeRideEnabled]);
+
+  const selectedType = state.rideType || 'standard';
+  const fare = fareConfigs[selectedType] || fareConfigs.standard;
+  const isSafeRide = driverPref === 'verified';
 
   const handleConfirm = async () => {
     setLoading(true);
-    await new Promise(r => setTimeout(r, 1200));
-    setLoading(false);
-    navigate('/customer/ride/r5');
+    setError(null);
+    try {
+      const res = await apiPost('/api/bookings/request', {
+        pickup: state.pickup,
+        destination: state.destination,
+        rideType: fare.label,
+        baseFare: fare.base,
+        rideFare: fare.ride,
+        total: fare.total,
+        distance: '12.4 km',
+        eta: fare.eta,
+        safeRideEnabled: isSafeRide ? 1 : 0,
+      });
+
+      if (res?.booking?.id) {
+        navigate(`/customer/ride/${res.booking.id}`);
+      } else {
+        navigate('/customer/dashboard');
+      }
+    } catch (err) {
+      console.error('Failed to request ride:', err);
+      setError(err.message || 'Failed to request ride. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -92,9 +135,9 @@ export default function RideConfirmation() {
               {text}
             </div>
           ))}
-          <div className="flex items-center gap-1.5 text-xs font-medium" style={{ color: '#16a34a' }}>
+          <div className="flex items-center gap-1.5 text-xs font-medium" style={{ color: isSafeRide ? '#16a34a' : '#9ca3af' }}>
             <ShieldCheck size={13} />
-            SafeRide Active
+            {isSafeRide ? 'SafeRide Active' : 'SafeRide Off'}
           </div>
         </div>
       </div>
@@ -166,6 +209,13 @@ export default function RideConfirmation() {
           Driver will arrive in approximately <span style={{ fontWeight: 600, color: '#f9fafb' }}>5 minutes</span>
         </p>
       </div>
+
+      {/* Error display */}
+      {error && (
+        <div className="p-3 rounded text-sm bg-red-950/50 border border-red-800 text-red-300">
+          {error}
+        </div>
+      )}
 
       {/* CTAs */}
       <div className="flex gap-2">

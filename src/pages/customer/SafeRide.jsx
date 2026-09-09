@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Save, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { useApi } from '../../hooks/useApi';
+import { useApi, apiPost } from '../../hooks/useApi';
 import SafeRideCard from '../../components/safety/SafeRideCard';
 import EmergencyContactCard from '../../components/safety/EmergencyContactCard';
 import Button from '../../components/common/Button';
@@ -24,6 +24,12 @@ export default function SafeRide() {
   const [saved, setSaved] = useState(false);
   const [newContact, setNewContact] = useState({ name: '', phone: '' });
 
+  useEffect(() => {
+    if (profile && profile.safeRideEnabled !== undefined) {
+      setSafeRide(Boolean(profile.safeRideEnabled));
+    }
+  }, [profile]);
+
   const handleAddContact = () => {
     if (!newContact.name || !newContact.phone) return;
     setContacts(c => [...c, { id: `ec${Date.now()}`, ...newContact }]);
@@ -35,9 +41,16 @@ export default function SafeRide() {
     setContacts(c => c.filter(ec => ec.id !== id));
   };
 
-  const handleSave = () => {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+  const handleSave = async () => {
+    try {
+      await apiPost('/api/users/me', {
+        safeRideEnabled: safeRide ? 1 : 0,
+      });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch (err) {
+      console.error('Failed to save safety settings:', err);
+    }
   };
 
   return (

@@ -23,7 +23,7 @@ export default function SOSAlertCard({ alert, onResolve, onViewRide }) {
             </span>
           )}
           <p className="text-sm font-semibold" style={{ color: '#f9fafb' }}>
-            {alert.customerName}
+            {alert.customerName || alert.userName || 'Passenger'}
           </p>
         </div>
         <StatusBadge status={alert.status} />
@@ -32,10 +32,10 @@ export default function SOSAlertCard({ alert, onResolve, onViewRide }) {
       {/* Details */}
       <div className="space-y-1.5 mb-3">
         {[
-          { label: 'Ride', value: alert.rideId?.toUpperCase() },
-          { label: 'Driver', value: alert.driverName },
-          { label: 'Location', value: alert.location, truncate: true },
-          { label: 'Time', value: `${alert.time} · ${alert.date}` },
+          { label: 'Ride', value: alert.rideId && alert.rideId !== 'N/A' ? `#${alert.rideId.toUpperCase()}` : '—' },
+          { label: 'Driver', value: alert.driverName || 'No driver assigned' },
+          { label: 'Location', value: alert.location?.lat ? `${alert.location.lat}, ${alert.location.lng}` : 'Unknown', truncate: true },
+          { label: 'Time', value: alert.timestamp ? new Date(alert.timestamp).toLocaleString() : '—' },
         ].map(({ label, value, truncate }) => (
           <div key={label} className="flex items-start gap-2">
             <span className="text-xs w-16 shrink-0 pt-0.5" style={{ color: '#6b7280' }}>
@@ -56,18 +56,29 @@ export default function SOSAlertCard({ alert, onResolve, onViewRide }) {
         className="flex flex-wrap gap-2 pt-3"
         style={{ borderTop: '1px solid #1f2937' }}
       >
-        <Button variant="ghost" size="sm" onClick={() => onViewRide?.(alert.rideId)}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onViewRide?.(alert.rideId)}
+          disabled={!alert.rideId || alert.rideId === '—' || alert.rideId === 'N/A'}
+        >
           <Eye size={14} />
           View Ride
         </Button>
-        <a href={`tel:${alert.customerPhone}`}>
-          <Button variant="ghost" size="sm">
+        <a
+          href={alert.customerPhone ? `tel:${alert.customerPhone}` : '#'}
+          style={{ pointerEvents: alert.customerPhone ? 'auto' : 'none' }}
+        >
+          <Button variant="ghost" size="sm" disabled={!alert.customerPhone}>
             <Phone size={14} />
             Customer
           </Button>
         </a>
-        <a href={`tel:${alert.driverPhone}`}>
-          <Button variant="ghost" size="sm">
+        <a
+          href={alert.driverPhone ? `tel:${alert.driverPhone}` : '#'}
+          style={{ pointerEvents: alert.driverPhone ? 'auto' : 'none' }}
+        >
+          <Button variant="ghost" size="sm" disabled={!alert.driverPhone}>
             <Phone size={14} />
             Driver
           </Button>

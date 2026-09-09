@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { useApi } from '../../hooks/useApi';
+import { useApi, apiPost } from '../../hooks/useApi';
 import { Car, Home, Briefcase, Plus, ChevronRight, Navigation } from 'lucide-react';
 import Button from '../../components/common/Button';
 import SafeRideCard from '../../components/safety/SafeRideCard';
@@ -10,21 +10,38 @@ import RideCard from '../../components/booking/RideCard';
 export default function CustomerDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { data: bookings, loading } = useApi('/api/bookings');
+  const { data: bookings, loading } = useApi('/api/bookings', { pollInterval: 4000 });
+  const { data: profile } = useApi('/api/users/me');
   
   const [safeRide, setSafeRide] = useState(true);
   const [pickup, setPickup] = useState('');
   const [destination, setDestination] = useState('');
 
+  useEffect(() => {
+    if (profile && profile.safeRideEnabled !== undefined) {
+      setSafeRide(Boolean(profile.safeRideEnabled));
+    }
+  }, [profile]);
+
+  const handleToggleSafeRide = async () => {
+    const nextVal = !safeRide;
+    setSafeRide(nextVal);
+    try {
+      await apiPost('/api/users/me', { safeRideEnabled: nextVal ? 1 : 0 });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const recentRides = (bookings || [])
     .filter(b => b.status === 'completed')
     .slice(0, 3);
 
-  const activeRide = (bookings || []).find(b => b.status === 'in_progress' || b.status === 'accepted') || null;
+  const activeRide = (bookings || []).find(b => b.status === 'in_progress' || b.status === 'accepted' || b.status === 'pending') || null;
 
   const handleBook = () => {
-    navigate(!pickup && !destination ? '/customer/book' : '/customer/book', {
-      state: { pickup, destination },
+    navigate('/customer/book', {
+      state: { pickup, destination, safeRideEnabled: safeRide ? 1 : 0 },
     });
   };
 
@@ -55,13 +72,17 @@ export default function CustomerDashboard() {
               <Car size={18} className="text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs mb-0.5 text-[#9ca3af]">Active Ride</p>
+              <p className="text-xs mb-0.5 text-[#93c5fd]">
+                {activeRide.status === 'pending' ? 'Ride Requested · Finding Driver' : 'Active Ride'}
+              </p>
               <p className="text-sm font-medium truncate text-[#f9fafb]">
                 {activeRide.pickup} → {activeRide.destination}
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-white">{activeRide.eta}</span>
+              <span className="text-sm font-semibold text-white">
+                {activeRide.status === 'pending' ? 'Searching' : activeRide.eta}
+              </span>
               <ChevronRight size={18} className="text-white/70" />
             </div>
           </div>
@@ -138,7 +159,7 @@ export default function CustomerDashboard() {
       )}
 
       {/* SafeRide card */}
-      <SafeRideCard enabled={safeRide} onToggle={() => setSafeRide(s => !s)} />
+      <SafeRideCard enabled={safeRide} onToggle={handleToggleSafeRide} />
 
       {/* Recent rides */}
       {recentRides.length > 0 && (

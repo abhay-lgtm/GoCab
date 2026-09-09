@@ -7,7 +7,7 @@ import { useApi, apiPost } from '../../hooks/useApi';
 
 export default function RideRequests() {
   const navigate = useNavigate();
-  const { data: bookings, loading, refetch } = useApi('/api/bookings');
+  const { data: bookings, loading, refetch } = useApi('/api/bookings', { pollInterval: 3000 });
   
   const [localRejected, setLocalRejected] = useState([]);
   
@@ -16,8 +16,8 @@ export default function RideRequests() {
   const handleAccept = async (reqId) => {
     try {
       await apiPost(`/api/bookings/${reqId}/accept`, {});
-      navigate(`/driver/ride/${reqId}`);
       refetch();
+      navigate(`/driver/ride/${reqId}`);
     } catch (e) {
       console.error(e);
     }

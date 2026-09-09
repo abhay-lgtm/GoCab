@@ -8,5 +8,6 @@ router.use(authenticate);
 
 router.get('/me', getMe);
 router.put('/me', updateMe);
+router.post('/me', updateMe);
 
 export default router;

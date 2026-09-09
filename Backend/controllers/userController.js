@@ -12,17 +12,18 @@ export const getMe = (req, res) => {
 };
 
 export const updateMe = (req, res) => {
-  const { name, phone } = req.body;
+  const { name, phone, safeRideEnabled } = req.body;
   const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
   
   if (!user) {
     return res.status(404).json({ message: 'User not found' });
   }
   
-  const updatedName = name || user.name;
-  const updatedPhone = phone || user.phone;
+  const updatedName = name !== undefined ? name : user.name;
+  const updatedPhone = phone !== undefined ? phone : user.phone;
+  const updatedSafeRide = safeRideEnabled !== undefined ? (safeRideEnabled ? 1 : 0) : (user.safeRideEnabled !== undefined ? user.safeRideEnabled : 1);
   
-  db.prepare('UPDATE users SET name = ?, phone = ? WHERE id = ?').run(updatedName, updatedPhone, req.user.id);
+  db.prepare('UPDATE users SET name = ?, phone = ?, safeRideEnabled = ? WHERE id = ?').run(updatedName, updatedPhone, updatedSafeRide, req.user.id);
   
   const updatedUser = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
   const { password, ...userProfile } = updatedUser;

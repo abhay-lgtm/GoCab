@@ -25,16 +25,19 @@ export default function DriverDashboard() {
   const navigate = useNavigate();
 
   const { data: driverProfile, loading: profileLoading } = useApi('/api/drivers/me');
-  const { data: pendingBookings, loading: requestsLoading, refetch } = useApi('/api/bookings');
+  const { data: pendingBookings, loading: requestsLoading, refetch } = useApi('/api/bookings', { pollInterval: 3000 });
 
   const [available, setAvailable] = useState(true);
   const [localRejected, setLocalRejected] = useState([]);
 
   const requests = (pendingBookings || []).filter(req => req.status === 'pending' && !localRejected.includes(req.id));
+  const activeRide = (pendingBookings || []).find(b => b.driverId === user?.id && (b.status === 'accepted' || b.status === 'in_progress'));
+  const completedRides = (pendingBookings || []).filter(b => b.driverId === user?.id && b.status === 'completed');
 
   const handleAccept = async (reqId) => {
     try {
       await apiPost(`/api/bookings/${reqId}/accept`, {});
+      refetch();
       navigate(`/driver/ride/${reqId}`);
     } catch (e) {
       console.error(e);
@@ -50,8 +53,9 @@ export default function DriverDashboard() {
   }
 
   const driver = driverProfile || {};
-  const todayRides = 0;
-  const todayEarnings = '—';
+  const totalEarned = completedRides.reduce((sum, b) => sum + (Number(b.total) || 0), 0);
+  const todayRides = completedRides.length;
+  const todayEarnings = totalEarned > 0 ? formatCurrency(totalEarned) : '—';
 
   return (
     <div className="flex flex-col max-w-2xl mx-auto px-4 sm:px-6 py-6 gap-5">
@@ -78,6 +82,29 @@ export default function DriverDashboard() {
           {available ? 'Available' : 'Offline'}
         </button>
       </div>
+
+      {/* Active ride banner */}
+      {activeRide && (
+        <div
+          onClick={() => navigate(`/driver/ride/${activeRide.id}`)}
+          className="flex items-center gap-4 px-5 py-4 bg-[#1e3a5f] border border-[#2563eb]/50 rounded cursor-pointer hover:opacity-90 transition-opacity"
+        >
+          <div className="w-10 h-10 rounded flex items-center justify-center shrink-0 bg-[#2563eb]">
+            <Car size={18} className="text-white" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs mb-0.5 text-[#93c5fd] font-medium">Ride In Progress</p>
+            <p className="text-sm font-medium truncate text-[#f9fafb]">
+              {activeRide.pickup} → {activeRide.destination} ({activeRide.customerName})
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="primary" size="sm">
+              View Ride
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3">
