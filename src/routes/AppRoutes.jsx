@@ -6,6 +6,7 @@ import DashboardShell from '../layouts/DashboardShell';
 import Landing from '../pages/public/Landing';
 import Login from '../pages/public/Login';
 import Register from '../pages/public/Register';
+import ShareTrack from '../pages/public/ShareTrack';
 
 // Customer pages
 import CustomerDashboard from '../pages/customer/CustomerDashboard';
@@ -41,6 +42,8 @@ export default function AppRoutes() {
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      {/* Shared live tracking — no login needed */}
+      <Route path="/track/:token" element={<ShareTrack />} />
 
       {/* Customer routes */}
       <Route element={<DashboardShell />}>

@@ -3,12 +3,6 @@ import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext(null);
 
-// Mock credentials for demo login
-const MOCK_CREDENTIALS = {
-  'abhay@example.com': { password: 'password123', role: 'customer', id: 'u1' },
-  'rajesh@example.com': { password: 'password123', role: 'driver', id: 'd1' },
-  'admin@ridesphere.in': { password: 'admin123', role: 'admin', id: 'a1' },
-};
 
 const ROLE_DASHBOARDS = {
   customer: '/customer/dashboard',
@@ -49,7 +43,7 @@ export function AuthProvider({ children }) {
         id: data.userId,
         email,
         role: data.role,
-        name: data.role === 'admin' ? 'Admin User' : (data.role === 'driver' ? 'Rajesh Kumar' : 'Abhay Prasad'),
+        name: data.name,
         token: data.token
       };
       

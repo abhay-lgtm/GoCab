@@ -8,6 +8,9 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
+    watch: {
+      ignored: ['**/Backend/**', '**/*.db*', '**/*.sqlite*'],
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:5000',

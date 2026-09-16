@@ -73,20 +73,29 @@ db.exec(`
     lng REAL,
     timestamp TEXT
   );
+
+  CREATE TABLE IF NOT EXISTS share_tokens (
+    token TEXT PRIMARY KEY,
+    userId TEXT NOT NULL,
+    bookingId TEXT NOT NULL,
+    createdAt TEXT NOT NULL
+  );
 `);
 
-try {
-  db.exec('ALTER TABLE bookings ADD COLUMN otp TEXT');
-} catch (e) {
-  // column already exists
-}
-try {
-  db.exec("UPDATE bookings SET otp = '1234' WHERE otp IS NULL");
-} catch (e) {}
+// Migrations (safe, ignore if column exists)
+const migrations = [
+  'ALTER TABLE bookings ADD COLUMN otp TEXT',
+  "UPDATE bookings SET otp = '1234' WHERE otp IS NULL",
+  'ALTER TABLE users ADD COLUMN safeRideEnabled INTEGER DEFAULT 1',
+  'ALTER TABLE bookings ADD COLUMN pickupLat REAL',
+  'ALTER TABLE bookings ADD COLUMN pickupLng REAL',
+  'ALTER TABLE bookings ADD COLUMN dropoffLat REAL',
+  'ALTER TABLE bookings ADD COLUMN dropoffLng REAL',
+];
 
-try {
-  db.exec('ALTER TABLE users ADD COLUMN safeRideEnabled INTEGER DEFAULT 1');
-} catch (e) {}
+for (const sql of migrations) {
+  try { db.exec(sql); } catch (_) { /* column/op already exists */ }
+}
 
 // Seed data
 const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get().count;

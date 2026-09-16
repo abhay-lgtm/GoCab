@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from '../components/layout/Sidebar';
 import MobileNavigation from '../components/layout/MobileNavigation';
 import { ToastContainer } from '../components/common/Toast';
@@ -16,6 +16,9 @@ export const useAppToast = () => {
 function DashboardShell() {
   const [collapsed, setCollapsed] = useState(false);
   const { toasts, addToast, removeToast } = useToast();
+  // Use location.pathname so the page-enter animation only fires on actual
+  // route changes, not on every re-render caused by polling.
+  const { pathname } = useLocation();
 
   return (
     <ToastContext.Provider value={addToast}>
@@ -24,9 +27,13 @@ function DashboardShell() {
         <div className="flex-1 flex flex-col overflow-hidden" style={{ position: 'relative', zIndex: 1 }}>
           {/* Main content */}
           <main className="flex-1 overflow-y-auto pb-20 md:pb-0">
-            <div className="page-enter flex justify-center min-h-full p-4 sm:p-6 lg:p-10 lg:pt-16 xl:pt-24">
+            <div className="flex justify-center min-h-full p-4 sm:p-6 lg:p-10 lg:pt-16 xl:pt-24">
               <div className="w-full max-w-[900px]">
-                <Outlet />
+                {/* key={pathname} remounts this wrapper (and re-triggers page-enter)
+                    only when the route actually changes, not on polling re-renders */}
+                <div key={pathname} className="page-enter">
+                  <Outlet />
+                </div>
               </div>
             </div>
           </main>

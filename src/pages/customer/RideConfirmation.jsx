@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
-  MapPin, Navigation, Clock, Car, ShieldCheck, ChevronRight, Edit3,
+  MapPin, Navigation, Clock, Car, ShieldCheck, ChevronRight, Edit3, Loader2,
 } from 'lucide-react';
 import Button from '../../components/common/Button';
 import { formatCurrency } from '../../utils/formatCurrency';
@@ -20,10 +20,11 @@ const glass = {
   padding: 20,
 };
 
-const fareConfigs = {
-  standard: { base: 40, ride: 280, total: 320, eta: '5 min', label: 'Standard' },
-  premium: { base: 60, ride: 390, total: 450, eta: '8 min', label: 'Premium' },
-  pool: { base: 30, ride: 190, total: 220, eta: '12 min', label: 'Pool' },
+// Per-km rates and base fares
+const rateConfigs = {
+  standard: { perKm: 22, base: 40, eta: '5 min', label: 'Standard' },
+  premium:  { perKm: 30, base: 60, eta: '8 min', label: 'Premium' },
+  pool:     { perKm: 14, base: 30, eta: '12 min', label: 'Pool' },
 };
 
 export default function RideConfirmation() {
@@ -42,6 +43,14 @@ export default function RideConfirmation() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Distance + coords from ORS
+  const [distanceKm, setDistanceKm] = useState(null);
+  const [durationMin, setDurationMin] = useState(null);
+  const [pickupCoords, setPickupCoords] = useState(null);
+  const [dropoffCoords, setDropoffCoords] = useState(null);
+  const [distLoading, setDistLoading] = useState(false);
+  const [distError, setDistError] = useState(null);
+
   useEffect(() => {
     if (state.safeRideEnabled !== undefined) {
       setDriverPref(state.safeRideEnabled ? 'verified' : 'any');
@@ -50,9 +59,38 @@ export default function RideConfirmation() {
     }
   }, [profile, state.safeRideEnabled]);
 
+  // Fetch real distance from ORS via backend
+  useEffect(() => {
+    if (!state.pickup || !state.destination) return;
+    setDistLoading(true);
+    setDistError(null);
+    const token = localStorage.getItem('token');
+    fetch(
+      `/api/location/distance?pickup=${encodeURIComponent(state.pickup)}&dropoff=${encodeURIComponent(state.destination)}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.distanceKm) {
+          setDistanceKm(data.distanceKm);
+          setDurationMin(data.durationMin);
+          setPickupCoords(data.pickupCoords);
+          setDropoffCoords(data.dropoffCoords);
+        } else {
+          setDistError(data.message || 'Could not fetch distance');
+        }
+      })
+      .catch(() => setDistError('Distance fetch failed'))
+      .finally(() => setDistLoading(false));
+  }, [state.pickup, state.destination]);
+
   const selectedType = state.rideType || 'standard';
-  const fare = fareConfigs[selectedType] || fareConfigs.standard;
+  const rates = rateConfigs[selectedType] || rateConfigs.standard;
   const isSafeRide = driverPref === 'verified';
+
+  // Dynamic fare calculation
+  const rideFare = distanceKm != null ? Math.round(distanceKm * rates.perKm) : null;
+  const totalFare = rideFare != null ? rideFare + rates.base : null;
 
   const handleConfirm = async () => {
     setLoading(true);
@@ -61,13 +99,18 @@ export default function RideConfirmation() {
       const res = await apiPost('/api/bookings/request', {
         pickup: state.pickup,
         destination: state.destination,
-        rideType: fare.label,
-        baseFare: fare.base,
-        rideFare: fare.ride,
-        total: fare.total,
-        distance: '12.4 km',
-        eta: fare.eta,
+        rideType: rates.label,
+        baseFare: rates.base,
+        rideFare: rideFare ?? 0,
+        total: totalFare ?? 0,
+        distance: distanceKm != null ? `${distanceKm} km` : 'N/A',
+        eta: rates.eta,
         safeRideEnabled: isSafeRide ? 1 : 0,
+        // Pass coords so backend can store them
+        pickupLat: pickupCoords?.lat,
+        pickupLng: pickupCoords?.lng,
+        dropoffLat: dropoffCoords?.lat,
+        dropoffLng: dropoffCoords?.lng,
       });
 
       if (res?.booking?.id) {
@@ -122,46 +165,58 @@ export default function RideConfirmation() {
           </div>
         </div>
 
-        <div
-          className="flex gap-4 mt-4 pt-4"
-          style={{ borderTop: '1px solid #1f2937' }}
-        >
-          {[
-            { icon: Clock, text: '~28 min' },
-            { icon: Car, text: '12.4 km' },
-          ].map(({ icon: Icon, text }) => (
-            <div key={text} className="flex items-center gap-1.5 text-xs" style={{ color: '#9ca3af' }}>
-              <Icon size={13} />
-              {text}
-            </div>
-          ))}
+        <div className="flex gap-4 mt-4 pt-4" style={{ borderTop: '1px solid #1f2937' }}>
+          <div className="flex items-center gap-1.5 text-xs" style={{ color: '#9ca3af' }}>
+            <Clock size={13} />
+            {distLoading ? '…' : durationMin != null ? `~${durationMin} min` : '~28 min'}
+          </div>
+          <div className="flex items-center gap-1.5 text-xs" style={{ color: '#9ca3af' }}>
+            <Car size={13} />
+            {distLoading ? (
+              <span className="flex items-center gap-1"><Loader2 size={11} className="animate-spin" /> Calculating…</span>
+            ) : distanceKm != null ? `${distanceKm} km` : '—'}
+          </div>
           <div className="flex items-center gap-1.5 text-xs font-medium" style={{ color: isSafeRide ? '#16a34a' : '#9ca3af' }}>
             <ShieldCheck size={13} />
             {isSafeRide ? 'SafeRide Active' : 'SafeRide Off'}
           </div>
         </div>
+
+        {distError && (
+          <p className="text-xs mt-2 text-amber-400">⚠ {distError} — using estimated fare</p>
+        )}
       </div>
 
       {/* Fare breakdown */}
       <div style={glass}>
         <h2 className="text-sm font-semibold mb-3" style={{ color: '#f9fafb' }}>Fare Estimate</h2>
-        <div className="flex flex-col gap-2">
-          {[
-            { label: 'Base fare', value: fare.base },
-            { label: 'Ride fare (12.4 km)', value: fare.ride },
-          ].map(({ label, value }) => (
-            <div key={label} className="flex justify-between">
-              <span className="text-sm" style={{ color: '#9ca3af' }}>{label}</span>
-              <span className="text-sm" style={{ color: '#e5e7eb' }}>{formatCurrency(value)}</span>
-            </div>
-          ))}
-          <div className="flex justify-between pt-2" style={{ borderTop: '1px solid #1f2937' }}>
-            <span className="text-sm font-semibold" style={{ color: '#f9fafb' }}>Total</span>
-            <span className="text-base font-bold" style={{ color: '#f9fafb' }}>
-              {formatCurrency(fare.total)}
-            </span>
+        {distLoading ? (
+          <div className="flex items-center gap-2 text-sm" style={{ color: '#9ca3af' }}>
+            <Loader2 size={15} className="animate-spin" />
+            Calculating fare via OpenRouteService…
           </div>
-        </div>
+        ) : (
+          <div className="flex flex-col gap-2">
+            <div className="flex justify-between">
+              <span className="text-sm" style={{ color: '#9ca3af' }}>Base fare</span>
+              <span className="text-sm" style={{ color: '#e5e7eb' }}>{formatCurrency(rates.base)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm" style={{ color: '#9ca3af' }}>
+                Ride fare ({distanceKm != null ? `${distanceKm} km × ₹${rates.perKm}/km` : `₹${rates.perKm}/km`})
+              </span>
+              <span className="text-sm" style={{ color: '#e5e7eb' }}>
+                {rideFare != null ? formatCurrency(rideFare) : '—'}
+              </span>
+            </div>
+            <div className="flex justify-between pt-2" style={{ borderTop: '1px solid #1f2937' }}>
+              <span className="text-sm font-semibold" style={{ color: '#f9fafb' }}>Total</span>
+              <span className="text-base font-bold" style={{ color: '#f9fafb' }}>
+                {totalFare != null ? formatCurrency(totalFare) : '—'}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Driver preference */}
@@ -206,7 +261,8 @@ export default function RideConfirmation() {
       >
         <Clock size={16} style={{ color: '#2563eb' }} />
         <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
-          Driver will arrive in approximately <span style={{ fontWeight: 600, color: '#f9fafb' }}>5 minutes</span>
+          Driver will arrive in approximately{' '}
+          <span style={{ fontWeight: 600, color: '#f9fafb' }}>{rates.eta}</span>
         </p>
       </div>
 
@@ -223,7 +279,14 @@ export default function RideConfirmation() {
           <Edit3 size={16} />
           Edit
         </Button>
-        <Button variant="primary" fullWidth size="lg" onClick={handleConfirm} loading={loading}>
+        <Button
+          variant="primary"
+          fullWidth
+          size="lg"
+          onClick={handleConfirm}
+          loading={loading}
+          disabled={distLoading || loading}
+        >
           Confirm Booking
           <ChevronRight size={18} />
         </Button>

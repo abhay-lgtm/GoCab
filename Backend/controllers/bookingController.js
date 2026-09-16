@@ -5,13 +5,17 @@ export const requestCab = (req, res) => {
     pickup,
     dropoff,
     destination: destInput,
-    distance = '12.4 km',
+    distance = 'N/A',
     baseFare = 40,
     rideFare = 280,
     total = 320,
     eta = '5 min',
     safeRideEnabled = 1,
     rideType = 'Standard',
+    pickupLat,
+    pickupLng,
+    dropoffLat,
+    dropoffLng,
   } = req.body;
 
   const destination = destInput || dropoff;
@@ -21,15 +25,15 @@ export const requestCab = (req, res) => {
 
   const id = Date.now().toString();
   const otp = Math.floor(1000 + Math.random() * 9000).toString();
-  // Get customer info
   const customer = db.prepare('SELECT name, phone FROM users WHERE id = ?').get(req.user.id);
-  
+
   db.prepare(`
     INSERT INTO bookings (
       id, customerId, customerName, status, pickup, destination,
-      distance, baseFare, rideFare, total, eta, safeRideEnabled, rideType, otp, createdAt
+      distance, baseFare, rideFare, total, eta, safeRideEnabled, rideType, otp, createdAt,
+      pickupLat, pickupLng, dropoffLat, dropoffLng
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).run(
     id,
     req.user.id,
@@ -45,11 +49,14 @@ export const requestCab = (req, res) => {
     safeRideEnabled ? 1 : 0,
     rideType,
     otp,
-    new Date().toISOString()
+    new Date().toISOString(),
+    pickupLat ?? null,
+    pickupLng ?? null,
+    dropoffLat ?? null,
+    dropoffLng ?? null,
   );
 
   const booking = db.prepare('SELECT * FROM bookings WHERE id = ?').get(id);
-
   res.status(201).json({ message: 'Cab requested successfully', booking });
 };
 
@@ -138,6 +145,17 @@ export const completeBooking = (req, res) => {
     db.prepare("UPDATE users SET totalRides = COALESCE(totalRides, 0) + 1 WHERE id = ?").run(booking.driverId);
   }
   res.json({ message: 'Booking completed' });
+};
+
+export const paymentCollected = (req, res) => {
+  const { bookingId } = req.params;
+  const booking = db.prepare('SELECT * FROM bookings WHERE id = ?').get(bookingId);
+  if (!booking) return res.status(404).json({ message: 'Booking not found' });
+  if (booking.status !== 'completed') return res.status(400).json({ message: 'Ride must be completed before collecting payment' });
+
+  db.prepare("UPDATE bookings SET status = 'payment_collected' WHERE id = ?").run(bookingId);
+  const updatedBooking = db.prepare('SELECT * FROM bookings WHERE id = ?').get(bookingId);
+  res.json({ message: 'Payment collected', booking: updatedBooking });
 };
 
 export const cancelBooking = (req, res) => {

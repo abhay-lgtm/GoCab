@@ -1,5 +1,5 @@
 import express from 'express';
-import { requestCab, getBookings, acceptBooking, startBooking, completeBooking, cancelBooking } from '../controllers/bookingController.js';
+import { requestCab, getBookings, acceptBooking, startBooking, completeBooking, paymentCollected, cancelBooking } from '../controllers/bookingController.js';
 import { authenticate, authorize } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -11,6 +11,7 @@ router.get('/', authorize(['customer', 'driver', 'admin']), getBookings);
 router.post('/:bookingId/accept', authorize(['driver']), acceptBooking);
 router.post('/:bookingId/start', authorize(['driver']), startBooking);
 router.post('/:bookingId/complete', authorize(['driver']), completeBooking);
+router.post('/:bookingId/payment-collected', authorize(['driver']), paymentCollected);
 router.post('/:bookingId/cancel', authorize(['customer', 'driver']), cancelBooking);
 
 export default router;
