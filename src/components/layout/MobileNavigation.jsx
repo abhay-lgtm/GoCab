@@ -9,8 +9,8 @@ import { useAuth } from '../../context/AuthContext';
 const customerLinks = [
   { to: '/customer/dashboard', label: 'Home', icon: LayoutDashboard },
   { to: '/customer/book', label: 'Book', icon: Car },
+  { to: '/customer/voice-booking', label: 'Voice', icon: Mic },
   { to: '/customer/saferide', label: 'Safe', icon: ShieldCheck },
-  { to: '/customer/history', label: 'History', icon: History },
   { to: '/customer/profile', label: 'Profile', icon: User },
 ];
 

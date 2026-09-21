@@ -3,141 +3,205 @@ import { useState, useRef, useCallback } from 'react';
 /**
  * useVoiceBooking
  *
- * Wraps the browser's Web Speech API for voice-based booking.
- * Falls back to a timed demo interaction when the API is not available.
+ * Multi-step voice booking hook.
+ * Step 1 → ask pickup,  Step 2 → ask destination
+ * Falls back to demo mode when Web Speech API is unavailable.
  *
- * States: 'idle' | 'listening' | 'recognized' | 'error'
+ * step:   'idle' | 'pickup' | 'destination' | 'done' | 'error'
+ * phase:  'listening' | 'processing' | 'confirmed'   (within each step)
  */
 export function useVoiceBooking() {
-  const [state, setState] = useState('idle');
-  const [transcript, setTranscript] = useState('');
-  const [recognizedData, setRecognizedData] = useState(null);
-  const [error, setError] = useState(null);
+  const [step, setStep]                 = useState('idle');
+  const [phase, setPhase]               = useState('listening');
+  const [transcript, setTranscript]     = useState('');
+  const [pickup, setPickup]             = useState('');
+  const [destination, setDestination]   = useState('');
+  const [error, setError]               = useState(null);
+
   const recognitionRef = useRef(null);
-  const demoTimerRef = useRef(null);
+  const demoTimerRef   = useRef(null);
 
   const isSupported =
     typeof window !== 'undefined' &&
     ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
 
-  // Parse a transcript into pickup / destination
-  const parseTranscript = useCallback((text) => {
-    const lower = text.toLowerCase();
+  /* ── helpers ── */
+  const capitalize = (str) =>
+    str
+      .trim()
+      .split(' ')
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' ');
 
-    // Very simple heuristic: look for "from X to Y" or "going to Y"
-    const fromToMatch = lower.match(/from (.+?) to (.+)/);
-    if (fromToMatch) {
-      return {
-        pickup: capitalize(fromToMatch[1].trim()),
-        destination: capitalize(fromToMatch[2].trim()),
-      };
+  /**
+   * Strip filler / trigger words and return the clean location string.
+   * e.g. "I want to go to Kottayam Railway Station" → "Kottayam Railway Station"
+   */
+  const parseLocation = useCallback((text) => {
+    const lower = text.toLowerCase().trim();
+
+    // Destination patterns
+    const destPatterns = [
+      /(?:going to|go to|i want to go to|take me to|drop me (?:at|to)|i need to go to|my destination is|navigate to|head to) (.+)/,
+      /(?:to|towards) (.+)/,
+    ];
+    for (const re of destPatterns) {
+      const m = lower.match(re);
+      if (m) return capitalize(m[1]);
     }
 
-    const toMatch = lower.match(/(?:to|go to|going to|drop me?(?:\s+(?:at|to))?) (.+)/);
-    if (toMatch) {
-      return {
-        pickup: 'IIIT Kottayam',   // default pickup
-        destination: capitalize(toMatch[1].trim()),
-      };
+    // Pickup patterns
+    const pickupPatterns = [
+      /(?:from|pickup from|pick me up (?:from|at)|i am at|i'm at|starting from|my location is|my pickup is) (.+)/,
+    ];
+    for (const re of pickupPatterns) {
+      const m = lower.match(re);
+      if (m) return capitalize(m[1]);
     }
 
-    // Fallback: treat entire transcript as destination
-    return {
-      pickup: 'IIIT Kottayam',
-      destination: capitalize(text.trim()),
-    };
+    // Fallback: return the whole thing capitalised
+    return capitalize(text);
   }, []);
 
-  const startListening = useCallback(() => {
-    setError(null);
-    setState('listening');
-    setTranscript('');
-    setRecognizedData(null);
-
-    if (isSupported) {
-      const SpeechRecognition =
-        window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognition = new SpeechRecognition();
-      recognition.lang = 'en-IN';
-      recognition.continuous = false;
-      recognition.interimResults = true;
-      recognition.maxAlternatives = 1;
-
-      recognition.onresult = (event) => {
-        const result = event.results[event.results.length - 1];
-        const text = result[0].transcript;
-        setTranscript(text);
-
-        if (result.isFinal) {
-          const parsed = parseTranscript(text);
-          setRecognizedData(parsed);
-          setState('recognized');
-        }
-      };
-
-      recognition.onerror = (event) => {
-        setError(event.error);
-        setState('error');
-      };
-
-      recognition.onend = () => {
-        if (state === 'listening') {
-          setState('idle');
-        }
-      };
-
-      recognitionRef.current = recognition;
-      recognition.start();
-    } else {
-      // Demo mode: simulate recognition after 2.5 seconds
-      demoTimerRef.current = setTimeout(() => {
-        const demoText = 'Kottayam Railway Station';
-        setTranscript(demoText);
-        const parsed = {
-          pickup: 'IIIT Kottayam',
-          destination: 'Kottayam Railway Station',
-        };
-        setRecognizedData(parsed);
-        setState('recognized');
-      }, 2500);
-    }
-  }, [isSupported, parseTranscript, state]);
-
-  const stopListening = useCallback(() => {
+  /* ── stop active recognition safely ── */
+  const stopRecognition = useCallback(() => {
     if (recognitionRef.current) {
-      recognitionRef.current.stop();
+      try { recognitionRef.current.stop(); } catch (_) { /* ignore */ }
       recognitionRef.current = null;
     }
     if (demoTimerRef.current) {
       clearTimeout(demoTimerRef.current);
+      demoTimerRef.current = null;
     }
-    setState('idle');
   }, []);
 
-  const reset = useCallback(() => {
-    stopListening();
+  /* ── core: start one recognition session, call onFinal(text) when done ── */
+  const startSession = useCallback((onFinal, demoSample) => {
     setTranscript('');
-    setRecognizedData(null);
     setError(null);
-    setState('idle');
-  }, [stopListening]);
+
+    if (isSupported) {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const rec = new SR();
+      rec.lang             = 'en-IN';
+      rec.continuous       = false;
+      rec.interimResults   = true;
+      rec.maxAlternatives  = 1;
+
+      rec.onresult = (ev) => {
+        const result = ev.results[ev.results.length - 1];
+        const text   = result[0].transcript;
+        setTranscript(text);
+        if (result.isFinal) {
+          recognitionRef.current = null;
+          setPhase('processing');
+          // small delay so "processing" flash is visible
+          setTimeout(() => onFinal(text), 400);
+        }
+      };
+
+      rec.onerror = (ev) => {
+        recognitionRef.current = null;
+        setError(ev.error);
+        setStep('error');
+        setPhase('listening');
+      };
+
+      rec.onend = () => {
+        // If we end without a final result (e.g. silence timeout), go back to idle
+        if (recognitionRef.current) {
+          recognitionRef.current = null;
+          setStep('idle');
+          setPhase('listening');
+        }
+      };
+
+      recognitionRef.current = rec;
+      rec.start();
+    } else {
+      // Demo mode
+      demoTimerRef.current = setTimeout(() => {
+        const sample = demoSample;
+        setTranscript(sample);
+        setPhase('processing');
+        setTimeout(() => onFinal(sample), 400);
+      }, 2500);
+    }
+  }, [isSupported]);
+
+  /* ── public API ── */
+
+  /** Begin the pickup step */
+  const startPickup = useCallback(() => {
+    stopRecognition();
+    setStep('pickup');
+    setPhase('listening');
+    setPickup('');
+    setDestination('');
+
+    startSession(
+      (text) => {
+        const loc = parseLocation(text);
+        setPickup(loc);
+        setPhase('confirmed');
+      },
+      'IIIT Kottayam',        // demo sample for pickup
+    );
+  }, [stopRecognition, startSession, parseLocation]);
+
+  /** Begin the destination step (called after pickup is confirmed) */
+  const startDestination = useCallback(() => {
+    stopRecognition();
+    setStep('destination');
+    setPhase('listening');
+    setDestination('');
+
+    startSession(
+      (text) => {
+        const loc = parseLocation(text);
+        setDestination(loc);
+        setPhase('confirmed');
+      },
+      'Kottayam Railway Station', // demo sample for destination
+    );
+  }, [stopRecognition, startSession, parseLocation]);
+
+  /** Confirm both locations → move to ride selection */
+  const confirmLocations = useCallback(() => {
+    setStep('done');
+    setPhase('listening');
+  }, []);
+
+  /** Full reset */
+  const reset = useCallback(() => {
+    stopRecognition();
+    setStep('idle');
+    setPhase('listening');
+    setTranscript('');
+    setPickup('');
+    setDestination('');
+    setError(null);
+  }, [stopRecognition]);
+
+  /** Manually override pickup text */
+  const setManualPickup = useCallback((v) => setPickup(v), []);
+
+  /** Manually override destination text */
+  const setManualDestination = useCallback((v) => setDestination(v), []);
 
   return {
-    state,
+    step,
+    phase,
     transcript,
-    recognizedData,
+    pickup,
+    destination,
     error,
     isSupported,
-    startListening,
-    stopListening,
+    startPickup,
+    startDestination,
+    confirmLocations,
     reset,
+    setManualPickup,
+    setManualDestination,
   };
-}
-
-function capitalize(str) {
-  if (!str) return '';
-  return str
-    .split(' ')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
 }

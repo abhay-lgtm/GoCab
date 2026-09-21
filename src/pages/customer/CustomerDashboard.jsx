@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useApi, apiPost } from '../../hooks/useApi';
-import { Car, Home, Briefcase, Plus, ChevronRight, Navigation } from 'lucide-react';
+import { Car, Home, Briefcase, Plus, ChevronRight, Navigation, Mic } from 'lucide-react';
 import Button from '../../components/common/Button';
 import SafeRideCard from '../../components/safety/SafeRideCard';
 import RideCard from '../../components/booking/RideCard';
@@ -130,6 +130,15 @@ export default function CustomerDashboard() {
             <Car size={18} />
             Book Ride
           </Button>
+          <Button
+            variant="secondary"
+            size="lg"
+            className="shrink-0 px-5"
+            onClick={() => navigate('/customer/voice-booking')}
+            title="Book with voice"
+          >
+            <Mic size={18} />
+          </Button>
         </div>
       </div>
 
@@ -160,6 +169,39 @@ export default function CustomerDashboard() {
 
       {/* SafeRide card */}
       <SafeRideCard enabled={safeRide} onToggle={handleToggleSafeRide} />
+
+      {/* Voice Booking feature card */}
+      <button
+        onClick={() => navigate('/customer/voice-booking')}
+        className="w-full text-left rounded transition-all duration-200 group"
+        style={{ background: 'linear-gradient(135deg, #2d1b69 0%, #1e1040 60%, #0f172a 100%)', border: '1px solid rgba(124,58,237,0.35)' }}
+        onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(124,58,237,0.7)'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(124,58,237,0.2)'; }}
+        onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(124,58,237,0.35)'; e.currentTarget.style.boxShadow = 'none'; }}
+      >
+        <div className="flex items-center gap-4 px-5 py-4">
+          {/* Mic icon with pulse ring */}
+          <div className="relative shrink-0">
+            <div className="absolute inset-0 rounded-full animate-ping" style={{ background: 'rgba(124,58,237,0.2)', animationDuration: '2s' }} />
+            <div
+              className="relative w-11 h-11 rounded-full flex items-center justify-center"
+              style={{ background: 'linear-gradient(135deg, #7c3aed, #8b5cf6)', boxShadow: '0 4px 16px rgba(124,58,237,0.4)' }}
+            >
+              <Mic size={20} className="text-white" />
+            </div>
+          </div>
+
+          {/* Text */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-0.5">
+              <p className="text-sm font-semibold" style={{ color: '#f9fafb' }}>Voice Booking</p>
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ background: 'rgba(124,58,237,0.25)', color: '#a78bfa' }}>NEW</span>
+            </div>
+            <p className="text-xs" style={{ color: '#9ca3af' }}>Speak your pickup & destination — hands-free booking</p>
+          </div>
+
+          <ChevronRight size={18} style={{ color: '#7c3aed' }} className="shrink-0 transition-transform group-hover:translate-x-1" />
+        </div>
+      </button>
 
       {/* Recent rides */}
       {recentRides.length > 0 && (

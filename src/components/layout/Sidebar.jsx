@@ -3,13 +3,14 @@ import { clsx } from 'clsx';
 import {
   LayoutDashboard, Car, ShieldCheck, MapPin, History,
   User, LogOut, AlertTriangle, Users, Activity, Navigation,
-  ChevronLeft, ChevronRight, List,
+  ChevronLeft, ChevronRight, List, Mic,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const customerLinks = [
   { to: '/customer/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/customer/book', label: 'Book Ride', icon: Car },
+  { to: '/customer/voice-booking', label: 'Voice Booking', icon: Mic },
   { to: '/customer/saferide', label: 'SafeRide', icon: ShieldCheck },
   { to: '/customer/ride/r5', label: 'Active Ride', icon: Navigation },
   { to: '/customer/history', label: 'Ride History', icon: History },

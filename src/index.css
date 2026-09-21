@@ -113,3 +113,20 @@ textarea:focus {
   outline-offset: 0 !important;
   box-shadow: none !important;
 }
+
+/* ── Voice Pulse waveform bars ── */
+@keyframes waveBar {
+  0%, 100% { transform: scaleY(0.35); opacity: 0.5; }
+  50%       { transform: scaleY(1);    opacity: 1;   }
+}
+
+.animate-wave-bar {
+  transform-origin: center bottom;
+  animation: waveBar 0.7s ease-in-out infinite;
+}
+
+/* ── Mic button breathing ring ── */
+@keyframes voicePulse {
+  0%, 100% { box-shadow: 0 0 0 0   rgba(124,58,237,0.5),  0 8px 24px rgba(124,58,237,0.4); }
+  50%       { box-shadow: 0 0 0 12px rgba(124,58,237,0),   0 8px 24px rgba(124,58,237,0.4); }
+}

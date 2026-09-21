@@ -2,22 +2,33 @@
  * VoicePulse
  *
  * Animated waveform/pulse shown while voice recognition is active.
+ * Bars animate with staggered delays to simulate a live audio waveform.
  */
-export default function VoicePulse({ active = false }) {
+export default function VoicePulse({ active = false, color = '#7c3aed', size = 'md' }) {
   if (!active) return null;
 
-  const bars = [3, 6, 9, 12, 9, 6, 3, 6, 9, 12, 9];
+  const heights = [4, 8, 14, 20, 28, 20, 14, 28, 20, 14, 8, 14, 20, 28, 20, 14, 8, 4];
+  const barW    = size === 'sm' ? 3 : 4;
+  const maxH    = size === 'sm' ? 20 : 36;
 
   return (
-    <div className="flex items-center justify-center gap-1 h-10">
-      {bars.map((height, i) => (
+    <div
+      className="flex items-center justify-center gap-[3px]"
+      style={{ height: maxH + 8 }}
+      aria-hidden="true"
+    >
+      {heights.map((h, i) => (
         <span
           key={i}
-          className="w-1 rounded-full bg-[#2563eb] animate-wave-bar"
+          className="rounded-full animate-wave-bar"
           style={{
-            height: `${height}px`,
-            animationDelay: `${i * 0.08}s`,
-            animationDuration: `${0.7 + (i % 3) * 0.15}s`,
+            width: barW,
+            height: Math.min(h, maxH),
+            background: color,
+            opacity: 0.85,
+            animationDelay: `${i * 0.06}s`,
+            animationDuration: `${0.65 + (i % 4) * 0.12}s`,
+            display: 'inline-block',
           }}
         />
       ))}
